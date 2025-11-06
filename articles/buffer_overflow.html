@@ -481,4 +481,36 @@ int main(int argc, char *argv[]) {
   printf("[DEBUG] buffer @ %p: \'%s\'\n", buffer, buffer);
   printf("[DEBUG] condition @ %p: \'%s\'\n", condition, condition);
   
-  if(strcmp(condition, "TRUE") ==
+  if(strcmp(condition, "TRUE") == 0 )
+  {
+    printf("Heap-based bufferoverlow succeeded !");
+  }
+  
+  free(buffer);
+  free(condition);
+}</code></pre>
+
+  <p>We can compile the program and run the binary to examine its behavior.</p>
+  <p><em>[Figure: Initial program output - image placeholder]</em></p>
+  <p>The buffer allocation is located at 0x580231a0 which is before the allocation of condition which is at 0x58023210. Therefore, these two addresses are 112 bytes apart.</p>
+  <p><em>[Figure: Memory addresses comparison - image placeholder]</em></p>
+  <p>Remember that the Heap grows downwards. Thus, if we overflow the condition variable, we could be able to print the message to complete the challenge. Let's see which strings to input in the first argument of the binary to enter the if statement.</p>
+  <p><em>[Figure: Successful overflow attempt - image placeholder]</em></p>
+  <p>We just demonstrated a classic heap overflow that both wrote "TRUE" into the adjacent condition buffer (so the strcmp returns true) and corrupted the heap metadata so free() aborts with double free or corruption (out) / IOT instruction.</p>
+  <p>However, the print statement is not flushed into stdout because it needs a new line character which is «\n» to be flushed directly into stdout. Hence, we need to flush it into stdout.</p>
+  <p>That's why, we can modify the base program by adding a fflush instruction and recompile it to see the printed message inside the if statement. Here is the modified code:</p>
+  <pre><code>if(strcmp(condition, "TRUE") == 0 )
+{
+  printf("Heap-based bufferoverlow succeeded !");
+  fflush(stdout);
+}</code></pre>
+  <p>With the same input value as before, we witnessed that the message is actually printed.</p>
+  <p><em>[Figure: Final successful output - image placeholder]</em></p>
+
+  <h2>Conclusion</h2>
+  <p>In this article, we explored the fundamentals of buffer overflow vulnerabilities on x86 architecture. We covered assembly language basics, memory segmentation, and practical examples of both stack-based and heap-based buffer overflows. These concepts form the foundation for understanding how memory corruption vulnerabilities work and how they can be exploited.</p>
+  <p>Understanding these low-level concepts is crucial for cybersecurity professionals, as it helps in both identifying vulnerabilities and developing secure code. In modern systems, various protections like ASLR, DEP, and stack canaries are implemented to mitigate these types of attacks, but the fundamental principles remain important for security research and analysis.</p>
+
+  <a href="../index.html" class="back-link">← Back to Blog</a>
+</body>
+</html>
