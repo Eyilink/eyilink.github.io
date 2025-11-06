@@ -373,7 +373,7 @@
   <p>But what is an array then. An array is N contiguous elements in memory. Contiguous means that there is one element after the other. An array finishes by a null byte (0x00) to specify that it is the end of this array. Arrays are also called buffers.</p>
   <p>C language also provides native types. The important thing to grasp is that each type has a size in bytes.</p>
   <p>The figure below displays the number of bytes, each type takes in memory:</p>
-  <p><em>[Figure: C data types and sizes - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image3.png" >
   <p>This will be important to remember when we will try to overflow other values at other memory addresses.</p>
   <p>So the important thing to understand is that when you declare a variable of a specified type, a space in memory is allocated for that variable using the size described by the type it implements.</p>
   <p>Therefore, if you set the value of this variable with something bigger than its originally allocated space it will overflow in the next memory spaces.</p>
@@ -410,7 +410,7 @@ int main(){
 }</code></pre>
 
   <p>We can compile it and run it, this will produce the output below:</p>
-  <p><em>[Figure: Pointer operations output - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image4.png" >
   <p>We can see that by allocating four bytes of memory for our pointer we can fill it with an int which is also four bytes.</p>
   <p>We can also note that the address where the pointer points (<em>Heap</em>) is lower in memory than the real address of the pointer (<em>Stack</em>).</p>
 
@@ -448,19 +448,19 @@ int main(int argc, char *argv[]) {
   <p>By now, we can understand most of this code. However, there is the <code>argv[1]</code> that we need to explain. Indeed, <code>argv[1]</code> will retrieve the first argument we give when we run our binary, we can run the binary with:</p>
   <pre><code>./a.out three</code></pre>
   <p>If we run the binary, we will notice that it will copy the first argument into <code>buffer_two</code>:</p>
-  <p><em>[Figure: Program output with "three" - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image5.png" >
   <p>Remember that all variables in a function are stored in the <em>Stack</em> in a FILO order, so here we declare the <code>value</code> variable first so it will go to the base of the <em>Stack</em>, then on top <code>buffer_one</code> will go and finally <code>buffer_two</code>.</p>
-  <p><em>[Figure: Stack layout diagram - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image6.png" >
   <p>So here, we know that we can manipulate the data in <code>buffer_two</code> and our goal is to rewrite the <code>value</code> variable. From the schema, we deduce that the <code>value</code> variable is 16 bytes away from the beginning of the <code>buffer_two</code> variable.</p>
   <p>We can confirm this using the GDB debugger and compute the difference between the two addresses of those variables:</p>
-  <p><em>[Figure: GDB address calculation - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image7.png" >
   <p>So, we do know that <code>buffer_two</code> is 16 bytes away from <code>value</code>, and <code>value</code> is 4 bytes, a char is 1 byte then if we want to completely fill <code>value</code> with «ABCD», we will have to put 16 bytes before «ABCD» which translates to adding 16 chars in front of it. The command below can help us accomplish this:</p>
   <pre><code>perl -e 'print "A"x16 . "ABCD"'</code></pre>
   <p>Output: <code>AAAAAAAAAAAAAAAAABCD</code></p>
   <p>If we run the program with this string in argument, we will notice that <code>value</code> is overflowed:</p>
-  <p><em>[Figure: Overflowed value output - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image8.png" >
   <p>Here, we can see that <code>value</code> is overflowed with <code>0x44434241</code> which is the representation of a char in ASCII. We shouldn't forget that those bytes are actually stored in <em>Little Endian</em> so what it is really stored is reversed, it gives <code>0x41 0x42 0x43 0x44</code> which if we translate each bytes in ASCII gives <em>A B C D</em>. We can use GDB to see it clearly:</p>
-  <p><em>[Figure: GDB memory view - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image9.png" >
   <p>This is all for this part, we explored how to overflow a variable near in memory. In the next part, we will overflow the return address of a local function.</p>
 
   <h2>VIII. Example 2: Heap-Based Buffer Overflow by Overriding a Variable</h2>
@@ -491,11 +491,11 @@ int main(int argc, char *argv[]) {
 }</code></pre>
 
   <p>We can compile the program and run the binary to examine its behavior.</p>
-  <p><em>[Figure: Initial program output - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image10.png" >
   <p>The buffer allocation is located at 0x580231a0 which is before the allocation of condition which is at 0x58023210. Therefore, these two addresses are 112 bytes apart.</p>
-  <p><em>[Figure: Memory addresses comparison - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image11.png" >
   <p>Remember that the Heap grows downwards. Thus, if we overflow the condition variable, we could be able to print the message to complete the challenge. Let's see which strings to input in the first argument of the binary to enter the if statement.</p>
-  <p><em>[Figure: Successful overflow attempt - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image12.png" >
   <p>We just demonstrated a classic heap overflow that both wrote "TRUE" into the adjacent condition buffer (so the strcmp returns true) and corrupted the heap metadata so free() aborts with double free or corruption (out) / IOT instruction.</p>
   <p>However, the print statement is not flushed into stdout because it needs a new line character which is «\n» to be flushed directly into stdout. Hence, we need to flush it into stdout.</p>
   <p>That's why, we can modify the base program by adding a fflush instruction and recompile it to see the printed message inside the if statement. Here is the modified code:</p>
@@ -505,7 +505,7 @@ int main(int argc, char *argv[]) {
   fflush(stdout);
 }</code></pre>
   <p>With the same input value as before, we witnessed that the message is actually printed.</p>
-  <p><em>[Figure: Final successful output - image placeholder]</em></p>
+  <img src="images_buffer_overflow/image13.png" >
 
   <h2>Conclusion</h2>
   <p>In this article, we explored the fundamentals of buffer overflow vulnerabilities on x86 architecture. We covered assembly language basics, memory segmentation, and practical examples of both stack-based and heap-based buffer overflows. These concepts form the foundation for understanding how memory corruption vulnerabilities work and how they can be exploited.</p>
