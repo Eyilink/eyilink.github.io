@@ -221,7 +221,7 @@
   <p>A register is a small and very fast storage inside a processor that is used to hold data temporarily during processing. Registers are vital for the execution of a compiled program.</p>
   <p>A lot of registers exist, but we will only focus on some of them.</p>
   <p>The first register we will talk about is the <em>Instruction Pointer</em> register (EIP). It holds the memory address of the instruction to be executed, effectively tracking where the program is currently executing.</p>
-  <img src="images/image1.png" >
+  <img src="images_buffer_overflow/image1.png" >
   <p>For example, in this simple <em>Hello World</em> program, if we place a breakpoint at line number 4 which will stop the program just before this instruction. We can see that the next executed instruction will be at the <code>0x565561a6</code> memory address.</p>
   <p>There are four other registers that are used as temporary variables and are respectively named:</p>
 
@@ -285,7 +285,7 @@
   <p>The <em>Stack</em> segment can also vary in size and is used to store stack frames. For each function in the program there is a corresponding stack frame. Each stack frame stores the local function variables, the passed variables as arguments and the function context notably the return address in order to restore the EIP register to the next instruction after the function is executed.</p>
   <p>The <em>Stack</em> segment implements a stack structure, so it is organized in a First In Last Out (FILO) order. So, the first instruction to be pushed in the <em>Stack</em> will be executed last.</p>
   <p>The <em>Stack</em> grows towards lower memory addresses. The following figure resumes memory segmentation:</p>
-  <img src="images/image2.png" >
+  <img src="images_buffer_overflow/image2.png" >
 
   <h2>IV. Setting Up a Compiler and a Debugger</h2>
   <p>For example, in the next sections, we will need a compiler that is compiling for a 32 bits target architecture. We will also need a debugger that is set in Intel syntax.</p>
