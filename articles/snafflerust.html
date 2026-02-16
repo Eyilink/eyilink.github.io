@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnaffleRust: Herramienta de Enumeración SMB</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: #fafafa;
+      padding: 30px 20px;
+      overflow-y: auto;
+      border-right: 1px solid #e0e0e0;
+      z-index: 1000;
+    }
+
+    .sidebar h3 {
+      color: #1a1a1a;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e0e0e0;
+      font-weight: 600;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+    }
+
+    .sidebar nav li {
+      margin: 0;
+    }
+
+    .sidebar nav a {
+      display: block;
+      color: #4a4a4a;
+      text-decoration: none;
+      padding: 10px 15px;
+      transition: all 0.2s ease;
+      font-size: 0.95em;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar nav a:hover {
+      color: #000;
+      background: #f0f0f0;
+      border-left: 2px solid #000;
+    }
+
+    .sidebar nav a.active {
+      background: #f0f0f0;
+      color: #000;
+      font-weight: 600;
+      border-left: 2px solid #000;
+    }
+
+    .sidebar nav ul ul {
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+
+    .sidebar nav ul ul a {
+      font-size: 0.88em;
+      color: #666;
+      padding: 8px 12px;
+    }
+
+    .back-home {
+      display: block;
+      margin-top: 30px;
+      padding: 12px 20px;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid #000;
+    }
+
+    .back-home:hover {
+      background: #333;
+      border-color: #333;
+    }
+
+    /* Main Content */
+    .content {
+      margin-left: 280px;
+      padding: 40px 60px;
+      max-width: 1200px;
+    }
+
+    /* Article Header */
+    .article-header {
+      background: #fff;
+      padding: 40px;
+      margin-bottom: 40px;
+      border-bottom: 2px solid #000;
+    }
+
+    .article-header h1 {
+      color: #000;
+      font-size: 2.5em;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .article-meta {
+      display: flex;
+      gap: 20px;
+      color: #666;
+      font-size: 0.95em;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    .article-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Sections */
+    section {
+      background: #fff;
+      padding: 35px 40px;
+      margin-bottom: 30px;
+      border: 1px solid #e0e0e0;
+    }
+
+    h2 {
+      color: #000;
+      font-size: 2em;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #000;
+      font-weight: 700;
+    }
+
+    h3 {
+      color: #1a1a1a;
+      font-size: 1.5em;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1.05em;
+      line-height: 1.8;
+      margin-bottom: 15px;
+      color: #34495e;
+      text-align: justify;
+    }
+
+    /* Lists */
+    ul, ol {
+      font-size: 1.05em;
+      line-height: 1.8;
+      margin: 20px 0;
+      padding-left: 25px;
+    }
+
+    li {
+      margin: 12px 0;
+      color: #34495e;
+    }
+
+    li strong {
+      color: #1a1a1a;
+    }
+
+    /* Code blocks */
+    code {
+      background-color: #f5f5f5;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.92em;
+      color: #000;
+      border: 1px solid #e0e0e0;
+    }
+
+    pre {
+      background: #f9f9f9;
+      padding: 20px;
+      border: 1px solid #e0e0e0;
+      border-left: 3px solid #000;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      border: none;
+      color: #000;
+      font-size: 0.95em;
+      line-height: 1.6;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 25px 0;
+      background-color: #fff;
+      border: 1px solid #e0e0e0;
+    }
+
+    table th {
+      background: #000;
+      color: white;
+      font-weight: 600;
+      padding: 15px;
+      text-align: left;
+      font-size: 1.05em;
+    }
+
+    table td {
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+      color: #2c3e50;
+    }
+
+    table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table tr:hover {
+      background-color: #fafafa;
+    }
+
+    /* Note boxes */
+    .note {
+      background: #f9f9f9;
+      border-left: 4px solid #000;
+      padding: 20px;
+      margin: 25px 0;
+      border: 1px solid #e0e0e0;
+      border-left: 4px solid #000;
+    }
+
+    .note strong {
+      color: #000;
+      font-size: 1.1em;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    /* Images */
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 30px auto;
+      border: 1px solid #e0e0e0;
+    }
+
+    /* Links */
+    a {
+      color: #000;
+      text-decoration: underline;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    a:hover {
+      color: #666;
+    }
+
+    /* Abstract section special styling */
+    .abstract {
+      background: #fafafa;
+      border-left: 4px solid #000;
+    }
+
+    .abstract ol {
+      background: #fff;
+      padding: 20px 20px 20px 45px;
+      border: 1px solid #e0e0e0;
+      margin-top: 15px;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .sidebar {
+        transform: translateX(-280px);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .content {
+        margin-left: 0;
+        padding: 20px;
+      }
+
+      .article-header {
+        padding: 25px;
+      }
+
+      section {
+        padding: 25px;
+      }
+    }
+
+    /* Scroll to top button */
+    .scroll-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #000;
+      color: white;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border: 1px solid #000;
+      text-decoration: none;
+      font-size: 1.5em;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+    }
+
+    .scroll-top:hover {
+      background: #333;
+      border-color: #333;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <h3>Tabla de Contenidos</h3>
+    <nav>
+      <ul>
+        <li><a href="#resumen">Resumen</a></li>
+        <li><a href="#introduccion">Introducción</a></li>
+        <li>
+          <a href="#smb">Server Message Block (SMB)</a>
+          <ul>
+            <li><a href="#netbios">NetBIOS</a></li>
+            <li><a href="#smb-tcp">SMB sobre TCP</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#arquitectura">Arquitectura de la Herramienta</a>
+          <ul>
+            <li><a href="#cross-compilation">Cross Compilación</a></li>
+          </ul>
+        </li>
+        <li><a href="#demo">Demostración</a></li>
+        <li><a href="#conclusion">Conclusión</a></li>
+      </ul>
+    </nav>
+    <a href="../index.html" class="back-home">← Volver al Blog</a>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Article Header -->
+    <div class="article-header">
+      <h1>SnaffleRust: Herramienta de Enumeración SMB</h1>
+      <div class="article-meta">
+        <span>Artículo de Investigación</span>
+        <span>|</span>
+        <span>Active Directory</span>
+        <span>|</span>
+        <span>12 min de lectura</span>
+      </div>
+    </div>
+
+    <!-- Resumen -->
+    <section id="resumen" class="abstract">
+      <h2>Resumen</h2>
+      <ol>
+        <li>Introducción</li>
+        <li>Server Message Block (SMB)</li>
+        <li>Presentación de la arquitectura de la herramienta</li>
+        <li>Demostración</li>
+      </ol>
+    </section>
+
+    <!-- Introducción -->
+    <section id="introduccion">
+      <h2>Introducción</h2>
+      <p>Este artículo está publicado en español y va a tratar de una nueva herramienta desarrollada en Rust que padece de un problema recurrente que las otras herramientas de tipo Snaffler en Python que no pueden conectarse a los shares cuando el puerto NetBios (139) no está abierto.</p>
+      <p>La herramienta está disponible con este enlace: <a href="https://github.com/Eyilink/snafflerust" target="_blank">Eyilink/snafflerust</a></p>
+    </section>
+
+    <!-- SMB -->
+    <section id="smb">
+      <h2>Server Message Block (SMB)</h2>
+      <p>Para comenzar, voy a presentar el protocolo SMB que es frecuentemente utilizado en entornos Active Directory para compartir archivos y comunicar principalmente entre máquinas Windows.</p>
+      <p>Históricamente, el protocolo se usó sobre NetBIOS usando el puerto 139, no obstante hoy en día puede usarse directamente en TCP con el puerto 445. Por lo tanto, la próxima sección tratará de NetBios.</p>
+
+      <h3 id="netbios">NetBIOS</h3>
+      <p>Network Basic Input Output System apareció en 1983 y se sitúa en la capa 5 del modelo OSI. Este protocolo permite a varias aplicaciones de la misma red comunicarse entre sí, sin embargo este protocolo no podía aplicarse sobre varias redes. Así que en 1987, el protocolo NBT fue creado para adaptar el protocolo NetBIOS sobre TCP y UDP.</p>
+      <p>Está dividido en tres servicios. El servicio de nombres NetBIOS usado para resolver nombres NetBIOS con el puerto 137 UDP y dos servicios NetBIOS Datagrama (puerto 138 UDP) y Sesión (puerto 139 TCP) para transportar mensajes SMB.</p>
+      <p>El servicio de nombres NetBIOS resuelve nombres a dirección IP.</p>
+      <p>El problema de ciertas herramientas es que se conectan usando el protocolo NetBIOS y a menudo este servicio no está disponible.</p>
+      <p>Aun así, existe otra forma de conectarse: SMB sobre TCP/IP.</p>
+
+      <h3 id="smb-tcp">SMB sobre TCP</h3>
+      <p>La Share IPC$ es una share especial de Windows que permite la comunicación remota entre procesos vía named pipes.</p>
+      <p>La comunicación entre procesos permite que los procesos puedan interactuar y compartir datos dentro del sistema operativo.</p>
+      <p>Named pipes es un tipo de comunicación unidireccional que es FIFO (First In First Out) significando que el primer elemento que entra en la cola es el primero que va a ser procesado. La comunicación unidireccional significa que ambos no pueden emitir datos al mismo tiempo, o sea que hay que uno escucha cuando el otro emite.</p>
+      <p>Puede conectarse a una share usando este método con el puerto 445 TCP de un servidor SMB. Usar este puerto padece del problema recurrente de las herramientas Python que suelen conectarse al puerto 139.</p>
+      <p>La autenticación a la share se hace gracias al protocolo NTLM que está encapsulado en los mensajes SMB. El NTLM se usó durante el establecimiento de la sesión SMB.</p>
+      <p>La instanciación de una sesión SMB se desarrolla así:</p>
+      <img src="images_snafflerust/smb_session.png" alt="Instanciación de sesión SMB">
+      <p>Los detalles de cada SMB mensajes pueden encontrarse aquí: <a href="https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-smb2/connecting-to-a-share" target="_blank">[MS-SMB2]: Connecting to a Share by Using an SMB2 Negotiate | Microsoft Learn</a></p>
+      <p>Varios mensajes SMB existen, pero sólo nos enfocaremos en los siguientes:</p>
+      <ul>
+        <li><strong>NEGOTIATE:</strong> Primer mensaje enviado cuando una sesión SMB está instanciada, este mensaje permite acordar ambas extremidades en la versión SMB usada (SMB1, SMB2, SMB3).</li>
+        <li><strong>SESSION_SETUP:</strong> Permite autenticar la sesión SMB mediante NTLM o Kerberos. Este mensaje devuelve un identificador de sesión (Session ID).</li>
+        <li><strong>TREE_CONNECT:</strong> Permite conectarse a una share con una Session ID especificando el UNC (Universal Naming Convention) de la share. Por ejemplo, \\host\nombre de la share. Este mensaje devuelve un identificador tree (Tree ID).</li>
+      </ul>
+
+      <p>Existen tres versiones de SMB. En la siguiente tabla se comparan los tres protocolos:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>SMBv1 (CIFS)</th>
+            <th>SMBv2</th>
+            <th>SMBv3</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Año de aparición</strong></td>
+            <td>1983</td>
+            <td>2006</td>
+            <td>2012-2016</td>
+          </tr>
+          <tr>
+            <td><strong>Seguridad</strong></td>
+            <td>
+              - Autenticación NTLMv1 / LM<br>
+              - No cifrado
+            </td>
+            <td>
+              - Autenticación NTLMv2 y Kerberos<br>
+              - Firma de los mensajes posible (SMB Signing)<br>
+              - No cifrado nativo
+            </td>
+            <td>
+              - Autenticación NTLMv2 y Kerberos fortalecido (blindaje Kerberos)<br>
+              - Cifrado nativo<br>
+              - Firma de los mensajes obligatoria
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>El protocolo SMB evolucionó principalmente por problemas de seguridad y optimización.</p>
+      <p>Esto concluye la parte teórica sobre SMB en este artículo.</p>
+
+      <div class="note">
+        <strong>¿Por qué usar la share IPC$ para conectarse al servidor SMB?</strong>
+        <p>Es porque conectarse a la share IPC$ fuerza la creación de una sesión SMB autenticada y un contexto de tree por defecto, que es reutilizado para llamar al API del servidor SMB y permite enumerar las shares presentes en el servidor.</p>
+        <p>Además, IPC$ existe en todos los servidores SMB Windows. Los ACL por defecto son:</p>
+        <ul>
+          <li>Authenticated Users: Autorizados.</li>
+          <li>Administrators: Acceso completo.</li>
+          <li>Anonymous: Rechazados.</li>
+        </ul>
+        <p>Así que, si disponemos de un usuario que puede autenticarse en el servidor Windows, podemos autenticarnos usando la share IPC$ en el servidor SMB subyacente.</p>
+      </div>
+    </section>
+
+    <!-- Arquitectura -->
+    <section id="arquitectura">
+      <h2>Presentación de la Arquitectura de la Herramienta</h2>
+      <p>La herramienta SnaffleRust está hecha en Rust, porque permite beneficiarse del desempeño de este lenguaje.</p>
+      <p>La herramienta está compuesta por dos librerías: <a href="https://crates.io/crates/pavao" target="_blank">pavao</a> y <a href="https://crates.io/crates/smb" target="_blank">smb</a>. Estas librerías se llaman crate cuando hablamos de Rust.</p>
+      <p>El crate SMB sirve para listar las shares SMB que están disponibles en el servidor SMB usando la share IPC$ y el crate Pavao sirve para iniciar una nueva sesión con una share e iterar sobre su contenido para detectar los archivos que tienen un alto valor.</p>
+      <p>La herramienta contiene reglas para detectar archivos que uno quiere encontrar. Estas reglas usan a Regex para identificar los archivos especiales. Estas reglas pueden personalizarse.</p>
+      <p>La herramienta usa varios threads para optimizar el desempeño en términos de tiempo.</p>
+      <p>Los archivos que son detectados no son guardados en la memoria, así que son mostrados directamente en el terminal.</p>
+
+      <h3 id="cross-compilation">Cross Compilación</h3>
+      <p>La herramienta puede compilarse en su propia máquina pero primero es necesario de instalar el paquete de sistema siguiente:</p>
+      <pre><code>sudo apt-get install libsmbclient-dev samba-dev</code></pre>
+      <p>Cuando este paquete está instalado, puede lanzar el comando siguiente:</p>
+      <pre><code>cargo build</code></pre>
+      <p>Si quieres compilar rumbo a otro sistema operativo, puede elegir un sistema objetivo con este comando:</p>
+      <pre><code>rustup target add &lt;sistema operativo objetivo&gt;</code></pre>
+      <p>Una lista exhaustiva puede encontrarse con este enlace: <a href="https://doc.rust-lang.org/rustc/platform-support.html" target="_blank">Platform Support - The rustc book</a>.</p>
+      <p>Después, si quiere compilar con objetivo tu otro sistema operativo, puede usar el comando siguiente:</p>
+      <pre><code>cargo build --target &lt;sistema operativo objetivo&gt;</code></pre>
+      <p>Así se desarrolla una compilación cruzada, pero mantiene en mente que compilar directamente en el sistema objetivo es mejor porque dispone de las librerías del sistema.</p>
+    </section>
+
+    <!-- Demostración -->
+    <section id="demo">
+      <h2>Demostración</h2>
+      <p>La siguiente ilustración debajo muestra SnaffleRust empleado en un servidor de CTF:</p>
+      <img src="images_snafflerust/demo.png" alt="Demostración de SnaffleRust">
+    </section>
+
+    <!-- Conclusión -->
+    <section id="conclusion">
+      <h2>Conclusión</h2>
+      <p>SnaffleRust representa una solución moderna y eficiente para la enumeración de shares SMB, resolviendo el problema recurrente de las herramientas existentes que dependen del puerto NetBIOS (139). Al utilizar directamente el puerto 445 TCP y aprovechar la share IPC$, la herramienta garantiza una conectividad más confiable en entornos Active Directory modernos.</p>
+      <p>El uso de Rust como lenguaje de programación no solo proporciona un rendimiento superior, sino que también permite una gestión de memoria segura y eficiente. La arquitectura basada en crates (pavao y smb) facilita el mantenimiento y la extensibilidad de la herramienta.</p>
+      <p>La capacidad de cross-compilación hace que SnaffleRust sea versátil y adaptable a diferentes entornos operativos, mientras que el uso de threads múltiples optimiza significativamente el tiempo de ejecución en comparación con herramientas similares.</p>
+    </section>
+  </div>
+
+  <!-- Scroll to top button -->
+  <a href="#" class="scroll-top" id="scrollTop">↑</a>
+
+  <script>
+    // Scroll to top functionality
+    const scrollTop = document.getElementById('scrollTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        scrollTop.classList.add('visible');
+      } else {
+        scrollTop.classList.remove('visible');
+      }
+    });
+
+    scrollTop.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Active section highlighting in sidebar
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.sidebar nav a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
