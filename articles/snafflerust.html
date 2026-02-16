@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SnaffleRust: Herramienta de Enumeración SMB</title>
+  <title>SnaffleRust: herramienta de enumeración SMB</title>
   <style>
     * {
       margin: 0;
@@ -434,7 +434,7 @@
       <p>Puede conectarse a una share usando este método con el puerto 445 TCP de un servidor SMB. Usar este puerto padece del problema recurrente de las herramientas Python que suelen conectarse al puerto 139.</p>
       <p>La autenticación a la share se hace gracias al protocolo NTLM que está encapsulado en los mensajes SMB. El NTLM se usó durante el establecimiento de la sesión SMB.</p>
       <p>La instanciación de una sesión SMB se desarrolla así:</p>
-      <img src="images_snafflerust/smb_session.png" alt="Instanciación de sesión SMB">
+      <img src="images_snafflerust/client.png" alt="Instanciación de sesión SMB">
       <p>Los detalles de cada SMB mensajes pueden encontrarse aquí: <a href="https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-smb2/connecting-to-a-share" target="_blank">[MS-SMB2]: Connecting to a Share by Using an SMB2 Negotiate | Microsoft Learn</a></p>
       <p>Varios mensajes SMB existen, pero sólo nos enfocaremos en los siguientes:</p>
       <ul>
