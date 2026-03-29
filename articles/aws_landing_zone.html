@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS: A Well-Architected Landing Zone – Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #fafafa;
+            padding: 30px 20px;
+            overflow-y: auto;
+            border-right: 1px solid #e0e0e0;
+            z-index: 1000;
+        }
+        .sidebar h3 {
+            color: #1a1a1a;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+        }
+        .sidebar nav ul {
+            list-style: none;
+        }
+        .sidebar nav li {
+            margin: 0;
+        }
+        .sidebar nav a {
+            display: block;
+            color: #4a4a4a;
+            text-decoration: none;
+            padding: 8px 12px;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+            border-left: 2px solid transparent;
+        }
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: #f0f0f0;
+            color: #000;
+            border-left: 2px solid #000;
+            font-weight: 600;
+        }
+        .sidebar nav ul ul {
+            margin-left: 15px;
+            margin-top: 5px;
+        }
+        .sidebar nav ul ul a {
+            font-size: 0.84em;
+            color: #666;
+            padding: 6px 12px;
+        }
+        .content {
+            margin-left: 280px;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+        }
+        .article-header {
+            background: #fff;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #000;
+        }
+        .article-header h1 {
+            color: #000;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .article-meta {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        section {
+            background: #fff;
+            padding: 35px 40px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+        h2 {
+            color: #000;
+            font-size: 2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #000;
+            font-weight: 700;
+        }
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        h4 {
+            color: #1a1a1a;
+            font-size: 1.2em;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        p {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #34495e;
+            text-align: justify;
+        }
+        ul, ol {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin: 20px 0;
+            padding-left: 25px;
+        }
+        li {
+            margin: 12px 0;
+            color: #34495e;
+        }
+        li strong {
+            color: #1a1a1a;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.92em;
+            color: #000;
+            border: 1px solid #e0e0e0;
+        }
+        pre {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-left: 3px solid #000;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        pre code {
+            background: transparent;
+            padding: 0;
+            border: none;
+            color: #000;
+            font-size: 0.95em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+        }
+        table th {
+            background: #000;
+            color: white;
+            font-weight: 600;
+            padding: 15px;
+            text-align: left;
+        }
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #2c3e50;
+            vertical-align: top;
+        }
+        .note {
+            background: #f9f9f9;
+            border-left: 4px solid #000;
+            padding: 20px;
+            margin: 25px 0;
+            border: 1px solid #e0e0e0;
+            border-left: 4px solid #000;
+        }
+        .note strong {
+            color: #000;
+            font-weight: 600;
+        }
+        .diagram-placeholder {
+            background: #f0f0f0;
+            border: 1px dashed #aaa;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            font-style: italic;
+            color: #666;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #000;
+            color: white;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 1.5em;
+            z-index: 1001;
+        }
+        .scroll-top.visible {
+            opacity: 1;
+        }
+        @media (max-width: 968px) {
+            .sidebar {
+                transform: translateX(-280px);
+                transition: transform 0.3s ease;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            section, .article-header {
+                padding: 25px;
+            }
+        }
+
+        /* Añadir al final del bloque <style> */
+.sidebar-toggle {
+    position: fixed;
+    left: 20px;
+    top: 10px;
+    background: #000;
+    color: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1100;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s ease, background 0.2s;
+}
+.sidebar-toggle:hover {
+    background: #333;
+}
+
+
+/* Modificar la regla .sidebar existente para añadir transición */
+.sidebar {
+    /* mantener tus estilos actuales */
+    transition: transform 0.3s ease;
+}
+
+/* Nueva clase para colapsar */
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+/* Modificar la regla .content para que tenga transición */
+.content {
+    /* mantener tus estilos actuales */
+    transition: margin-left 0.3s ease;
+}
+
+/* Cuando la sidebar está colapsada, el contenido ocupa todo el ancho */
+body.sidebar-collapsed .content {
+    margin-left: 0;
+}
+
+/* Ajuste responsive para móvil (opcional, mejora experiencia) */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .content {
+        margin-left: 0;
+    }
+    body.sidebar-collapsed .content {
+        margin-left: 0;
+    }
+}
+    </style>
+</head>
+<body>
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+    <span id="toggleIcon">☰</span>
+</button>
+    <aside class="sidebar">
+        <h3>Contents</h3>
+        <nav>
+            <ul>
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#governance">I. Governance</a>
+                    <ul>
+                        <li><a href="#organizations">AWS Organizations</a></li>
+                        <li><a href="#tagging-policies">Tagging policies</a></li>
+                        <li><a href="#scp">Service Control Policies (SCP)</a></li>
+                        <li><a href="#rcp">Resource Control Policies (RCP)</a></li>
+                        <li><a href="#management-policies">Management policies</a></li>
+                        <li><a href="#breakglass">Break‑glass root users</a></li>
+                        <li><a href="#arn">Amazon Resource Names (ARN)</a></li>
+                        <li><a href="#cspm">Cloud Security Posture Management (CSPM)</a></li>
+                        <li><a href="#tiering">Tiering model</a></li>
+                        <li><a href="#global-view">AWS Global View Explorer</a></li>
+                    </ul>
+                </li>
+                <li><a href="#identity">II. Identity and access</a>
+                    <ul>
+                        <li><a href="#federated">Federated identities</a></li>
+                        <li><a href="#identity-variety">Variety of identities</a></li>
+                        <li><a href="#directory">Identity directory</a></li>
+                        <li><a href="#auth">Authentication mechanisms</a></li>
+                        <li><a href="#iam-policy">IAM policy structure</a></li>
+                        <li><a href="#pam">Privileged Access Management (PAM)</a></li>
+                        <li><a href="#iam-roles">AWS IAM, roles, cross‑account, PassRole</a></li>
+                    </ul>
+                </li>
+                <li><a href="#tools">III. Tools of the trade</a></li>
+                <li><a href="#infra-protection">IV. Infrastructure protection</a>
+                    <ul>
+                        <li><a href="#exposure">Exposure of management consoles</a></li>
+                        <li><a href="#network">Network security</a></li>
+                        <li><a href="#workload">Workload security</a></li>
+                        <li><a href="#imds">IMDSv1 vs IMDSv2</a></li>
+                        <li><a href="#instance-profile">EC2 instance profile</a></li>
+                        <li><a href="#cloudformation">CloudFormation: Stack & StackSet</a></li>
+                        <li><a href="#flaws">flAWS.cloud case study</a></li>
+                        <li><a href="#persistence">Persistence on AWS</a></li>
+                        <li><a href="#containers">Virtualized and containerized environments</a></li>
+                    </ul>
+                </li>
+                <li><a href="#detection">V. Detection capabilities</a></li>
+                <li><a href="#data-protection">VI. Data protection</a></li>
+                <li><a href="#datascience">VII. AWS for data science</a></li>
+                <li><a href="#iot">VIII. IoT</a></li>
+                <li><a href="#annexes">Annexes</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="content">
+        <div class="content-wrapper">
+            <div class="article-header">
+                <h1>AWS: A Well-Architected Landing Zone</h1>
+                <div class="article-meta">
+                    <span>Technical Article</span> |
+                    <span>Cloud Security</span> |
+                    <span>Complete Guide</span>
+                </div>
+            </div>
+
+            <!-- Introduction -->
+            <section id="introduction">
+                <h2>Introduction</h2>
+                <p>AWS is often one of the top choices as features are <strong>managed</strong> which means that security <strong>patches</strong>, <strong>backups</strong> and <strong>high availability</strong> are managed by <strong>AWS</strong> and benefit from their expertise.</p>
+                <p><strong>Each point</strong> in this document should receive <strong>special attention regarding security</strong>.</p>
+            </section>
+
+            <!-- Governance -->
+            <section id="governance">
+                <h2>I. Governance</h2>
+                <p>A <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-aws-environment/understanding-landing-zones.html" target="_blank">landing zone</a> is a well-architected, <strong>multi-account</strong> AWS environment. This is a starting point from which your organization can deploy workloads. Each account fulfills a <strong>business need</strong> and has a functional relation with another account of the landing zone.</p>
+                <div class="note"><strong>Remark:</strong> A well architected Landing Zone should be linked with a <strong>top quality documentation</strong> that explains the details of it at a macro level as well as a very detailed level if precisions needs to be made.</div>
+                <p>The first AWS service that enables building governance in a multi-account environment is <strong>Control Tower</strong>. Control Tower orchestrates the use of multiple AWS services such as AWS Organizations, AWS Service Catalog and AWS IAM Identity Center, to have a well governed Landing Zone.</p>
+                <p>A Landing Zone should have the following features:</p>
+                <ul>
+                    <li>A multi-account environment where company resources are regrouped in containers such as Organizational Units (OU).</li>
+                    <li>Controls that provide the ongoing governance for your overall AWS environment.</li>
+                    <li>An account factory that permits the creation and enrollment of new accounts in the AWS's company environment.</li>
+                    <li>A continuous supervision of the company's Landing Zone such as a dashboard.</li>
+                </ul>
+                <p>Let's define services used by Control Tower:</p>
+                <ul>
+                    <li><strong>AWS Organizations</strong>: This service enables the organization of your company's resources into clearly defined containers.</li>
+                    <li><strong>AWS Service Catalog</strong>: This service can be used to create new secured services in the organization such as an account factory that uses AWS APIs and a custom logic through CloudFormation StackSets. CloudFormation capabilities will be explained in the Workload security and hardening section.</li>
+                    <li><strong>AWS IAM Identity Center</strong>: This service allows to federate an external users directory such as Microsoft EntraID. It will be explained in detail in the Identity and Access section.</li>
+                </ul>
+                <p>However, the use of Control Tower is completely <strong>optional</strong>, a custom Landing Zone can be created from the start following the mentioned guidelines.</p>
+                <div class="diagram-placeholder">[Diagram: High-level schema for Control Tower – Management account, Log Archive, Audit accounts]</div>
+                <p>As seen above, the concept of <strong>Management</strong> account, <strong>Log Archive</strong> and <strong>Audit</strong> accounts appeared. A focus needs to be done on AWS Organizations in order to understand finely the core of the Landing Zone.</p>
+
+                <h3 id="organizations">AWS Organizations</h3>
+                <p>An <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html" target="_blank">organization</a> is a <strong>collection</strong> of AWS accounts that you can manage centrally and organize into a <strong>hierarchical</strong>, tree-like structure with a <strong>root at the top and organizational units</strong> nested under the root. Each account can be directly in the root, or placed in one of the OUs in the hierarchy.</p>
+                <p>Each organization consists of:</p>
+                <ul>
+                    <li>A <strong>management</strong> account</li>
+                    <li>Zero or more <strong>member</strong> accounts</li>
+                    <li>Zero or more organizational units (OUs)</li>
+                    <li>Zero or more <strong>policies</strong>.</li>
+                </ul>
+                <p>AWS accounts are stored in containers called Organizational Units (OUs). Policies can be applied on OUs.</p>
+                <div class="diagram-placeholder">[Diagram: Organizational structure with root, OUs, and accounts]</div>
+                <p>Each organization contains an <strong>administrative root</strong> in the <strong>Management</strong> account and is the <strong>starting point</strong> of the organization. The root is the top-most container in your organization's hierarchy. Under this root, you can create organizational units (OUs) to logically group your accounts and organize these OUs into a hierarchy.</p>
+                <p>If you apply a <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#management-policies" target="_blank">management policy</a> to the root, it applies to <strong>all organizational units</strong> (OUs) and accounts, including the <strong>management</strong> account for the organization.</p>
+                <p>If you apply an authorization policy such as an <strong>SCP</strong>, to the <strong>root</strong>, it <strong>applies to all organizational units</strong> and <strong>member accounts</strong> in the organization. It does <strong>not apply to the management account</strong> in the organization.</p>
+                <p>The administration of certain services can be <strong>delegated</strong> to a <strong>member account</strong> in order to separate functional needs.</p>
+                <p>The Management account is also called the Organization account as it bears all the organization. The list below describes the actions it can do:</p>
+                <ul>
+                    <li>Create other accounts in your organization</li>
+                    <li>Invite and manage invitations for other accounts to join your organization</li>
+                    <li><strong>Designate delegated administrator accounts</strong></li>
+                    <li>Remove accounts from your organization</li>
+                    <li>Attach policies to entities such as roots, organizational units (OUs), or accounts within your organization</li>
+                    <li>Enable integration with supported AWS services to provide service functionality across all of the accounts in the organization.</li>
+                </ul>
+                <p><strong>Financial considerations</strong>: The management account is the ultimate owner of the organization, having final control over security, infrastructure, and finance policies. This account has the role of a payer account and is <strong>responsible for paying all charges</strong> accrued by the accounts in its organization.</p>
+                <div class="note"><strong>Remarks:</strong>
+                    <ul>
+                        <li>You <strong>cannot change which account in your organization is the management account</strong>.</li>
+                        <li>The management account does not have to be directly under the root, it can be placed anywhere in the organization.</li>
+                    </ul>
+                </div>
+                <p>From the organization's management account, you can designate one or more member accounts as a <strong>delegated administrator</strong>. There are two types of delegated administrators:</p>
+                <ul>
+                    <li><strong>Delegated administrator for Organizations</strong>: From these accounts, you can manage <strong>organization policies and attach policies to entities</strong> (roots, OUs, or accounts) within the organization.</li>
+                    <li><strong>Delegated administrator for an AWS service</strong>: From these accounts, you can manage AWS services that integrate with Organizations.</li>
+                </ul>
+                <p>It is recommended to use the <strong>Management account and its users and roles only for tasks that must be performed by this account</strong>. This is because security features like service control policies (SCPs) do not restrict any users or roles in the management account. In a practical case, If the Management account is used for another purpose and the security of one of the underlying components is weak, an attacker could take over an identity in this account and <strong>escape policies</strong>. That's why <strong>delegated administrators should be used</strong> to administrate services other than Organizations and not to use the Management account to administrate other services.</p>
+
+                <h3 id="tagging-policies">Tagging policies</h3>
+                <p>A mean to identify the scope of a resource is called <strong>Tags</strong>. Tags are custom attribute labels that you assign or that AWS assigns to AWS resources. Each tag has two parts: a <strong>key</strong> and a <strong>value</strong> (optional).</p>
+                <p><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_tag-policies.html" target="_blank">Tag policies</a> help <strong>standardize</strong> and enforce tag's naming convention by applying rules known as tag policies. Tag policies are a type of policy that can help you standardize tags across resources in your organization's accounts. In a tag policy, you specify tagging rules applicable to resources when they are tagged.</p>
+                <p>Using tag policies involves working with multiple AWS services:</p>
+                <ul>
+                    <li>Use AWS Organizations to manage tag policies. When you sign in to the organization's management account, you use Organizations to enable the tag policies feature. Then you can create tag policies and attach them to the organization entities to put those tagging rules in effect.</li>
+                    <li>Use AWS Resource Groups to manage compliance with tag policies. When you sign in to an account in your organization, you use Resource Groups to find noncompliant tags on resources in the account. You can correct noncompliant tags in the AWS service where you created the resource.</li>
+                </ul>
+                <p>Tags primarily serve the purpose to organize resources, but can be used for cost allocation in <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html" target="_blank">AWS Cost Explorer</a>, can be used in IAM policies to identify resources, can be used for automation of backups and AWS Lambda functions, and in Organizations to apply policies.</p>
+                <div class="note"><strong>Remark:</strong> Lambda is a serverless compute service that runs a specified code in response to events without provisioning or managing servers.</div>
+
+                <h3 id="scp">Service Control Policies (SCP)</h3>
+                <p><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html#scp-effects-on-permissions" target="_blank">Service control policies</a> (SCPs) are a type of <strong>organization policy</strong> that you can use to manage permissions in your organization. SCPs affect only <strong>IAM users and roles</strong> of accounts of the organization. They also don't affect users or roles from accounts outside the organization.</p>
+                <p>SCPs affect only <strong>member accounts</strong> in the organization. They have <strong>no effect on users or roles in the management</strong> account. This also means that SCPs apply to member accounts that are designated as delegated administrators.</p>
+                <p>An SCP restricts permissions for IAM users and roles in member accounts, including the member account's root user.</p>
+                <p>SCPs apply <strong>vertically</strong>, meaning a permission will only be allowed if every parent OUs permit it as well. This vertical scheme is also applied for denied permissions.</p>
+                <div class="note"><strong>Remark:</strong> AWS strongly recommends that you don't attach SCPs to the root of your organization without thoroughly testing the impact that the policy has on accounts. Instead, create an OU that you can move your accounts into one at a time, or at least in small numbers, to ensure that you don't inadvertently lock users out of key services.</div>
+                <p>The following SCPs are usually applied:</p>
+                <ul>
+                    <li>A policy to block actions when a user attempts to <strong>leave the organization</strong> (aws:LeaveOrganization), ensuring that member accounts cannot exit the organization without administrative approval.</li>
+                    <li>A policy to restrict the <strong>disabling or modification of centralized logging services</strong> such as AWS CloudTrail, preventing users from turning off audit logging.</li>
+                    <li>A policy to prevent <strong>deletion or modification of log storage</strong> in Amazon S3 buckets used for centralized logging.</li>
+                    <li>A policy to restrict <strong>changes to security monitoring services</strong> like Amazon GuardDuty or AWS Security Hub.</li>
+                    <li>A policy to prevent <strong>disabling configuration monitoring</strong> in AWS Config.</li>
+                    <li>A policy to block <strong>certain regions or restrict resource creation</strong> to <strong>approved regions</strong> only.</li>
+                </ul>
+                <p>The following reference can be used to fine tune SCPs: <a href="https://github.com/aws-samples/service-control-policy-examples" target="_blank">aws-samples/service-control-policy-examples: Example AWS Service control policies to get started or mature your usage of AWS SCPs.</a></p>
+
+                <h3 id="rcp">Resource Control Policies (RCP)</h3>
+                <p>A <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_rcps.html" target="_blank">Resource Control Policy</a> (RCP) is a policy that permits to control which actions can be done on a specific resource.</p>
+                <p>RCPs only apply to resources. However, only a few AWS services support them:</p>
+                <ul>
+                    <li>Amazon S3</li>
+                    <li>AWS Security Token Service</li>
+                    <li>AWS Key Management Service</li>
+                    <li>Amazon SQS</li>
+                    <li>AWS Secrets Manager</li>
+                    <li>Amazon Cognito</li>
+                    <li>Amazon CloudWatch Logs</li>
+                    <li>Amazon DynamoDB</li>
+                    <li>Amazon Elastic Container Registry</li>
+                    <li>Amazon OpenSearch Serverless</li>
+                </ul>
+                <p>RCPs apply vertically like SCPs and it is also strongly advised to test them before applying them to the root of the organization.</p>
+                <p>The following RCPs are usually applied:</p>
+                <ul>
+                    <li><strong>Log protection</strong> (CloudTrail and S3)</li>
+                    <li>Cryptographic key protection (AWS KMS)</li>
+                    <li>Security configuration protection (AWS Config, Guard Duty, Security Hub)</li>
+                    <li><strong>Backup protection</strong> (AWS Backup)</li>
+                    <li><strong>Shared network-related infrastructure protection</strong> (VPC, AWS RAM)</li>
+                </ul>
+
+                <h3 id="management-policies">Management policies</h3>
+                <p><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_management_policies.html" target="_blank">Management policies</a> are policies that can be implemented at the service-level for the entire organization in order to configure the Landing Zone or to apply <strong>standards</strong> to the Landing Zone.</p>
+                <p>For example, <strong>tag policies</strong> are a type of management policies.</p>
+                <p>A lot of different ones exist such as:</p>
+                <ul>
+                    <li>Backup policies</li>
+                    <li>Tag policies</li>
+                    <li>Chat applications policies</li>
+                    <li>AI services opt-out policies</li>
+                    <li>Security Hub policies</li>
+                    <li>Amazon Bedrock policies</li>
+                    <li>Amazon Inspector policies</li>
+                    <li>Upgrade rollout policies</li>
+                    <li>Amazon S3 policies</li>
+                    <li>AWS Shield Network Security Director policies</li>
+                </ul>
+
+                <h3 id="breakglass">Break-glass root users</h3>
+                <p>In enterprise environments, the <strong>root user</strong> of the <strong>management account</strong> typically acts as the <strong>primary <a href="https://docs.aws.amazon.com/wellarchitected/latest/devops-guidance/ag.sad.5-implement-break-glass-procedures.html" target="_blank">break-glass</a></strong> for <strong>administering the entire organization</strong>, while the <strong>root</strong> users of <strong>member accounts</strong> can only <strong>manage their own account</strong> or resources within their OU.</p>
+                <p>The management account root user can assume administrative roles (AssumeRole) in any member account and most importantly in the <strong>management</strong> account, ensuring that full organizational control can be recovered in emergency situations, such as IAM role failures or SSO outages.</p>
+                <p>To protect this critical access, root credentials of the management account are stored in a <strong>secure vault</strong>, <strong>MFA</strong> with a <strong>physical token</strong> is enforced, and <strong>passwords</strong> and <strong>tokens</strong> are <strong>rotated periodically</strong>.</p>
+                <p>Additionally, emergency roles are defined in critical member accounts:</p>
+                <ul>
+                    <li><strong>SSO</strong> account</li>
+                    <li><strong>Logging</strong> account (CloudTrail, CloudWatch)</li>
+                    <li><strong>Security</strong> account (GuardDuty, Security Hub, Config)</li>
+                    <li><strong>Shared infrastructure</strong>/<strong>network</strong> account</li>
+                    <li><strong>Backup</strong> account</li>
+                </ul>
+                <p>Those emergency roles can only be assumed by the <strong>root</strong> user of that member account, ensuring operational continuity without compromising daily security or the principles of least privilege and exposing the credentials of the root user of the management account.</p>
+
+                <h3 id="arn">Amazon Resource Names (ARN)</h3>
+                <p>An <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html" target="_blank">ARN</a> is a <strong>global</strong> and <strong>unique identifier</strong> given to each resource on AWS.</p>
+                <p>The format of each ARN is as follows:</p>
+                <pre><code>arn:partition:service:region:account-id:resource-id
+arn:partition:service:region:account-id:resource-type/resource-id
+arn:partition:service:region:account-id:resource-type:resource-id</code></pre>
+                <p>Which concretely, translate to:</p>
+                <ul>
+                    <li>IAM user: <code>arn:aws:iam::123456789012:user/john</code></li>
+                    <li>SNS topic: <code>arn:aws:sns:us-east-1:123456789012:example-sns-topic-name</code></li>
+                    <li>VPC: <code>arn:aws:ec2:us-east-1:123456789012:vpc/vpc-0e9801d129EXAMPLE</code></li>
+                </ul>
+                <p>The <strong>partition</strong> in which the resource is located (aws: AWS Regions, aws-cn: China Regions, aws-us-gov: AWS GovCloud (US) Regions). A partition is a group of AWS Regions. Each AWS account is scoped to one partition.</p>
+                <p>The <strong>service</strong> that identifies the AWS product. The Region code. For example, us-east-2 for US East (Ohio).</p>
+                <p>The <strong>ID</strong> of the AWS account that owns the resource.</p>
+                <p>The <strong>resource type</strong>, for example, vpc for a virtual private cloud (VPC).</p>
+                <p>The <strong>resource identifier</strong>, this is the name of the resource, the ID of the resource, or a resource path, which precisely identifies a specific element.</p>
+
+                <h3 id="cspm">Cloud Security Posture Management (CSPM)</h3>
+                <p>A <strong>Cloud Security Posture Management</strong> (CSPM) solution is fundamentally about <strong>continuous</strong>, <strong>automated auditing</strong> of cloud environments to identify misconfigurations, compliance gaps, and potential attack vectors before they can be exploited.</p>
+                <p>In practice, it evaluates accounts, services, IAM policies, network settings, and data storage against both internal security policies and industry standards.</p>
+                <p>CSPMs can exist as third-party solutions, like <a href="https://www.wiz.io/" target="_blank">WIZ</a>, or be natively integrated into the cloud provider's ecosystem, such as AWS <a href="https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html" target="_blank">Security Hub</a>, which aggregates findings from multiple services and continuously monitors against best-practice frameworks like <strong>CIS</strong> or <a href="https://docs.aws.amazon.com/securityhub/latest/userguide/fsbp-standard.html" target="_blank">AWS Foundational Security Best Practices</a>.</p>
+                <p>The real value of CSPMs is the continuous visibility and contextual prioritization that allows to have a global idea of the security posture of an environment using metrics such as the volume of vulnerabilities on a certain part of the environment or a certain network. It allows deciphering infrastructural defaults.</p>
+
+                <h3 id="tiering">The tiering model</h3>
+                <p>The <a href="https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model" target="_blank">tiering model</a> originally used for Active Directory environments implements a 3-tier environment effectively separating:</p>
+                <ul>
+                    <li>Tier 0: <strong>Server</strong> used for <strong>critical business operations</strong> such as authentication and privileges.</li>
+                    <li>Tier 1: <strong>Servers</strong> that <strong>host applications</strong>.</li>
+                    <li>Tier 2: <strong>Workstations</strong>.</li>
+                </ul>
+                <p>This model can be adapted to AWS keeping in mind that the control plane should be separated from the workload and data plane.</p>
+                <div class="diagram-placeholder">[Diagram: Separation of data plane and control plane]</div>
+                <p>Once this separation is done, the tiering model can be implemented which would result in the following in this case:</p>
+                <div class="diagram-placeholder">[Diagram: AWS Organization Security Tier (CONTROL PLANE) → Tier 0, etc.]</div>
+                <p>The three tiers are organized as follows:</p>
+                <ul>
+                    <li><strong>Tier 0</strong>: Control plane that is vital for the infrastructure which means identity and security.</li>
+                    <li><strong>Tier 1</strong>: The (usually shared) <strong>infrastructure</strong> that supports the <strong>workloads</strong>.</li>
+                    <li><strong>Tier 2</strong>: The <strong>workloads</strong>.</li>
+                </ul>
+                <p>The following table will class the services of AWS by tiers that they follow in general, the affectation of a service to a certain tier can vary depending the context of the audited infrastructure:</p>
+                <table>
+                    <thead><tr><th>Tier 0</th><th>Tier 1</th><th>Tier 2</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>Organizations<br>IAM<br>IAM Identity Center<br>CloudTrail<br>Config<br>GuardDuty<br>Security Hub<br>Detective<br>KMS<br>Audit Manager<br>Control Tower</td>
+                            <td>VPC<br>Transit Gateway<br>Route 53<br>Direct Connect<br>Site-to-Site VPN<br>Client VPN<br>PrivateLink<br>RAM<br>Directory Service<br>Systems Manager<br>Secrets Manager<br>Certificate Manager<br>CloudFormation<br>Service Catalog<br>CodePipeline<br>CodeBuild<br>CodeArtifact</td>
+                            <td>EC2<br>ECS<br>EKS<br>Lambda<br>Fargate<br>Elastic Load Balancing<br>Auto Scaling<br>API Gateway<br>S3<br>EFS<br>FSx<br>RDS<br>Aurora<br>DynamoDB<br>ElastiCache<br>OpenSearch Service<br>SQS<br>SNS<br>EventBridge<br>Step Functions</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>An important mention is that the tiering model enters the philosophy of the <a href="https://www.microsoft.com/en-US/security/business/security-101/what-is-zero-trust-architecture" target="_blank">Zero Trust</a> model which basically says that no system as hardened as it can be should be trusted and taken for granted.</p>
+
+                <h3 id="global-view">AWS Global View Explorer</h3>
+                <p><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/global-view.html" target="_blank">Global View Explorer</a> allows to <strong>oversee resources classified by regions</strong>. This tool is helpful as it permits to check the conformity of deployed resources, notably to check if there are resources in not allowed regions as specified in the company's policy.</p>
+                <p>However, <strong>some resources are deployed by default in all regions</strong>. For example, a default Virtual Private Cloud is created in each region, for AWS resources to be able to communicate together.</p>
+                <p>The button to use the Global View Explorer is located on the top right corner of the AWS panel usually.</p>
+                <p>Moreover, resources can be classified depending on 3 scopes in AWS:</p>
+                <ul>
+                    <li><strong>Global</strong> scope: resources that are available globally such as AWS IAM, AWS Organization, AWS Route53, etc.</li>
+                    <li><strong>Regional</strong> scope: resources that are created in a specific region (eu-west-1, us-east-2, etc.) such as VPC, AWS RDS, AWS Lambda, etc.</li>
+                    <li><strong>Zone</strong> scope: resources that are executed inside a specific availability zone (eu-west-1a, eu-west-1b, us-east-2a, us-east-2b, etc.) such as EC2 instances, EBS volumes, subnet inside a VPC, etc.</li>
+                </ul>
+            </section>
+
+            <!-- Identity and Access -->
+            <section id="identity">
+                <h2>II. Identity and access</h2>
+                <p>As you might know, many modern systems need scalability and interoperability with a large number of subsequent systems. In that matter, <strong>federating identity sources is not optional</strong>.</p>
+
+                <h3 id="federated">Federated identities</h3>
+                <p>AWS is able to <strong>federate</strong> multiple sources of identities using the <a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html" target="_blank">Identity Center</a> service. Identity Center can be federated with an important number of mainstream solutions such as:</p>
+                <ul>
+                    <li><strong>EntraID</strong></li>
+                    <li>Google Workspace</li>
+                    <li><strong>On-premises Active Directory</strong></li>
+                    <li>Okta</li>
+                    <li>A CyberArk vault</li>
+                </ul>
+                <p>AWS lets you access your AWS applications and accounts through the <a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/using-the-portal.html" target="_blank">Access Portal</a> which is highly scalable, as it enables identities to access resources through Identity Center which federates most of modern identity directories or vaults.</p>
+                <p>Moreover, Identity Center serves primarily for Single Sign-On integrating capabilities with all the sources of identity previously mentioned. The generic flow is:</p>
+                <ol>
+                    <li>A user wants to connect to Access Portal to access AWS resources</li>
+                    <li>He is redirected to his identity provider to authenticate</li>
+                    <li>Once authenticated, the user is redirected to the AWS Access Portal to complete the SSO flow and access required resources.</li>
+                </ol>
+                <p>Likewise, AWS supports OIDC and SAML for SSO, which covers the majority of modern use cases.</p>
+                <p>It is important to note that for internal directories such as Active Directory, a <strong>network connection to the internal directory is required</strong> such as using AWS Site-to-Site VPN, AWS Direct Connect or completely replicating the directory using AWS Directory Services.</p>
+                <p>In addition, <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html" target="_blank">Amazon Cognito</a> is an identity platform for <strong>web applications</strong> and <strong>mobile apps</strong>. It's a user directory, an authentication server, and an authorization service for OAuth 2.0 access tokens and AWS credentials. With Amazon Cognito, you can authenticate and authorize users from the Identity Center federated directory. This enhances capabilities if an application needs to access an important number of identity sources.</p>
+
+                <h3 id="identity-variety">The variety of identities</h3>
+                <p>In modern environments, multiple types of identities coexist, each serving a different purpose and operating at a <strong>different level of abstraction</strong>.</p>
+                <p>These identities can be categorized along several dimensions:</p>
+                <ul>
+                    <li>AWS accounts vs users (which could be called user accounts)</li>
+                    <li>Federated identities vs programmatic access</li>
+                    <li>Administrative identities vs service identities</li>
+                </ul>
+                <p>An AWS account represents the primary security and isolation boundary, and, as previously mentioned, it is a foundational element of any Landing Zone.</p>
+                <p>Within these AWS accounts, identities can originate from different sources. Users may be federated from an external identity provider, such as a corporate directory, or created locally using IAM users, although the latter is generally discouraged in favor of federation.</p>
+                <p><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/security-creds-programmatic-access.html" target="_blank">Programmatic access</a> refers to identities used by applications or automated systems. These include workloads such as serverless functions or external tools that require access to AWS resources through programmation. In AWS, this is typically implemented using access credentials, such as an access key ID and a secret access key, or more securely through <strong>temporary credentials</strong> (Session Token) and roles.</p>
+                <p>Finally, identities can also be classified based on their purpose. Administrative identities are used to manage and configure the environment and therefore require strong security controls. In contrast, service identities are non-human identities used by applications or systems to interact with AWS resources.</p>
+                <p>These concepts are fundamental in large-scale environments, where different identity types often overlap but must remain clearly separated to ensure proper access control for security purposes.</p>
+
+                <h3 id="directory">Identity directory</h3>
+                <p><a href="https://docs.aws.amazon.com/directoryservice/latest/admin-guide/what_is.html" target="_blank">Directory Service</a> is a managed service that enables the use of Microsoft Active Directory or LDAP aware applications in AWS environments. It provides multiple directory options to manage users, groups, devices, and access to AWS resources, offering seamless integration with AWS services.</p>
+                <p>The primary directory options include:</p>
+                <ul>
+                    <li><strong>AWS Managed Microsoft AD</strong>: A fully managed Microsoft Active Directory hosted on AWS. It supports features like schema extensions, group policies, and multi-factor authentication. It is ideal for organizations needing a standalone AD in the cloud or integration with <strong>on-premises AD through trust relationships</strong>.</li>
+                    <li><strong>AD Connector</strong>: A proxy service that connects AWS applications to an existing <strong>on-premises Microsoft AD</strong>. It allows users to log in to AWS services using their on-premises credentials without storing sensitive data in the cloud.</li>
+                    <li><strong>Simple</strong> AD: A low-cost, standalone directory compatible with basic Active Directory features. It is powered by Samba 4 and supports LDAP-aware applications.</li>
+                </ul>
+                <p>A powerful way of using Directory Service is by connecting an on-premises AD to AWS, and then using <a href="https://docs.aws.amazon.com/directoryservice/latest/admin-guide/vpc-interface-endpoints.html" target="_blank">Private Link</a> to share the directory to VPCs in the AWS environment. As a result, <strong>all services can interact with the Active Directory on the backbone network of AWS</strong> since Private Link is used to connect environments on the AWS backbone network. As the connection remains private, no traffic transit by Internet, which considerably reduces the exposure of the entire environment.</p>
+                <div class="note"><strong>Remark:</strong> Directory Service uses a service-linked role which means the service (Directory Service) is able to make actions on its own, like an agent to deploy and manage resources. For security purposes, only the Directory Service service is able to impersonate this role, which is called Assuming a role in AWS terms (which will be discussed in section IAM).</div>
+
+                <h3 id="auth">Authentication mechanisms: hardcoded keys vs SSO</h3>
+                <p>Multiple artefacts that bear the identity of users are implemented on AWS. The proprietary mechanism is the use of keys, such as:</p>
+                <ul>
+                    <li>The Access key ID which is the key that identifies which user the secret corresponds to.</li>
+                    <li>The Secret key which is the secret associated with the provided Access key.</li>
+                    <li>A Session Token which is optional and used when credentials are temporary.</li>
+                </ul>
+                <p>Those keys are delivered by the <a href="https://docs.aws.amazon.com/STS/latest/APIReference/welcome.html" target="_blank">Security Token service</a> (STS) which manages credentials of <strong>IAM identities</strong> such as IAM users and IAM roles.</p>
+                <p>IAM users are always delivered hard keys which are <strong>permanent</strong> by nature, on the contrary, IAM roles are always delivered <strong>temporary credentials</strong> that they can renew through STS. A best practice is to prefer using roles as they confer temporary credentials.</p>
+                <p>A second manner to retrieve an authentication artifact is to use the <a href="https://docs.aws.amazon.com/cli/latest/reference/sso/" target="_blank">Single Sign-On</a> capabilities of AWS which supports SAML as well as OIDC. As a result, a role or a user can be accessed through SSO.</p>
+                <p>In the context of the AWS CLI, an interesting capability of the SSO configuration is that it <strong>supports the use of proxies</strong>, which is convenient when an environment is only accessible through a proxy. SSO delivers an Oauth2 access token (JSON Web token) which grants the authorization to access the STS service, and therefore retrieve temporary keys in order to access the targeted AWS environment.</p>
+                <p>A great reference for AWS commands and CLI configuration is the following: <a href="https://docs.aws.amazon.com/cli/latest/reference/#" target="_blank">aws — AWS CLI 2.34.12 Command Reference</a>.</p>
+
+                <h3 id="iam-policy">IAM policy structure</h3>
+                <p>AWS IAM <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html" target="_blank">policies</a> describe permissions of entities on specific resources, permissions can be attached to the following entities:</p>
+                <ol>
+                    <li><strong>Identity-Based</strong> Policies: These are attached to IAM identities (users, groups, or roles) and can be <strong>managed</strong> or <strong>inline</strong>.</li>
+                    <li><strong>Resource-Based</strong> Policies: These are attached directly to AWS resources (e.g., S3 buckets) and specify which principals (users, roles, or accounts) can access the resource.</li>
+                </ol>
+                <p>Some more advanced policies exist such as <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#policies_session" target="_blank">Session Policies</a> which differ in nature from the ones above and are more complex.</p>
+                <p>As you noticed above, a policy can be:</p>
+                <ul>
+                    <li><strong>Managed</strong>: Standalone policies that <strong>can be reused across multiple identities</strong>. They can be AWS-managed or customer-managed.</li>
+                    <li><strong>Inline</strong>: Policies <strong>directly embedded within a single identity</strong>, maintaining a one-to-one relationship.</li>
+                </ul>
+                <p>Those mechanisms enable to configure fine-grained policies to describe permissions within an AWS environment. A detailed AWS policy is as follows:</p>
+                <pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "OptionalStatementID",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::123456789012:user/ExampleUser"
+      },
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::example-bucket",
+      "Condition": {
+        "Bool": {
+          "aws:MultiFactorAuthPresent": "true"
+        }
+      }
+    }
+  ]
+}</code></pre>
+                <p>The following <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html" target="_blank">components of the detailed policy</a> are:</p>
+                <ul>
+                    <li><strong>Version</strong> : Specify the version of the language policy used (recommended : "2012-10-17").</li>
+                    <li><strong>Statement</strong> : Contains one or more permission declarations.</li>
+                    <li><strong>Effect</strong> : Define if the permission "Deny" or "Allows" the Action on the specific <strong>Resource</strong>.</li>
+                    <li><strong>Principal</strong> : Specifies entities (roles, users, AWS accounts) to which the permission applies</li>
+                    <li><strong>Action</strong> : List refused or authorized AWS actions (example: s3:ListBucket)</li>
+                    <li><strong>Resource</strong> : Defines resources to which the permission applies</li>
+                    <li><strong>Condition</strong> : <strong>Adds restrictions based on precised criterions</strong> such as using MFA authentication. If the Condition is not validated, the permission does not take into effect.</li>
+                </ul>
+                <p>Usual verbs for the Action claim are <strong>Get</strong>, <strong>List</strong> and <strong>Describe</strong>, which commonly prefix each <strong>Action</strong> claim. For example: s3:GetObject, s3:ListBucket and ec2:DescribeInstances. These verbs are a common pattern in AWS, and it is a gain of time to keep them in mind.</p>
+                <p>A <strong>common misconfiguration</strong> is to use the <strong>asterix</strong> (*) operator which allows all the possible values for a claim. On the contrary, the scalability of policies should be leveraged to create fine-grained permissions for entities.</p>
+
+                <h3 id="pam">Privileged Access Management (PAM)</h3>
+                <p><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html" target="_blank">AWS System Manager</a> (SSM) allows to manage nodes at a large scale, however nodes need to install the SSM agent. Once the SSM agent is installed on nodes in AWS (mostly EC2 instances), on-premises servers or virtual machines in other clouds, SSM lets you run <strong>playbooks</strong> that apply to nodes, those playbooks contain tasks that will be run in one or more designated nodes. This service can be compared to other modern mechanisms that have the same purpose such as <strong>Ansible</strong> (Tower), <strong>SCCM</strong> (Active Directory) or even <strong>LAPS</strong> to a certain extent as SSM stores secrets. SSM is important for <strong>PAM</strong> as most of the nodes are accessed using <strong>local administrator privileges</strong>.</p>
+                <p>It is relevant to note that sensitive access should pass through a <strong>cloud bastion</strong> if SSM is not used, in order to have a centralized entry point and to ease the work of forensic teams if an incident occurs as access logs should pass by the bastion and anything irregular would be flagged. When an administration network is separated from the user network, every access originating from the user network towards the administration network should pass through a bastion. <strong>SSM can open sessions</strong> over the AWS backbone network with full logging, which can eliminate the need for a bastion host.</p>
+                <p>AWS <a href="https://docs.aws.amazon.com/whitepapers/latest/navigating-gdpr-compliance/aws-key-management-service.html" target="_blank">Key Management Service</a> manages encryption keys used to encrypt data such as secrets, backup and volumes. It supports <strong>Hardware Security Modules</strong> (HSM) capacities. Those keys should have a <strong>renewal date</strong> in which the actual key expires and gets renewed in order to ensure that no ancient breached keys would still decrypt potentially sensitive data.</p>
+
+                <h3 id="iam-roles">AWS IAM</h3>
+                <p>The most interesting mechanism of AWS IAM is <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html" target="_blank">roles</a> as they allow to implement permissions via <strong>RBAC</strong> policies and are highly scalable as each role is attached to a set of policies and each identity can be assigned multiple roles.</p>
+                <p>Roles diverged in their purpose, most common roles are implemented for business needs such as applicative roles used in applications strongly related to the core of the company, for example, roles related to a money transfer application for a banking company. In a matter of security, most interesting roles are administrative roles as they are conferred high privileges, CI/CD roles as they usually access a large scope in a company's environment, audit roles as they also usually access a large scope with read-only rights, configuration management roles which are used to deploy large scales tasks on servers.</p>
+                <p>As previously mentioned break-glass roles are used to administrate the account in which the role is or administrate the entire organization if the role is in the management account. In the case of the management account, the identity attached to this role should implement a second verification through a physical token to ensure security.</p>
+                <p>Another sensitive mechanism exists, which are <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies-cross-account-resource-access.html" target="_blank">cross-account roles</a>. Those roles access resources in <strong>foreign AWS accounts</strong> as resources are identified by their <strong>ARN</strong> which precise in which AWS account the resource is. As a first prerequisite the targeted resource needs to <strong>support resource-based policy</strong>, which means that it is the targeted resource that specifies who accesses it, so it is the opposite of a regular identity-based policy which specifies which identity accessed which targeted resource. The second prerequisite is to <strong>create a local role that does the action wanted in the AWS account where the targeted resource</strong> is and the second step is to assume this role from the foreign account. To be able to assume a role in an AWS account from a foreign account, a <strong>trust policy</strong> should be created in order to tell the AWS account where the targeted resource is located that <strong>the foreign AWS account used to assume the role is trusted.</strong></p>
+                <p>This introduces perfectly the next part, where we will detail the mechanism of assuming a role. In AWS, assuming a role refers to the process of <strong>temporarily acquiring a different set of permissions by using the AWS Security Token Service</strong> (<a href="https://docs.aws.amazon.com/STS/latest/APIReference/welcome.html" target="_blank">STS</a>). Instead of operating with long-term credentials tied to a user or service, an identity (such as an IAM user, application, or even another AWS account) requests <strong>temporary credentials</strong> to assume an IAM role that has a specific permission policy attached.</p>
+                <p>A critical component of this mechanism is the <strong>trust policy</strong>. The <a href="https://aws.amazon.com/blogs/security/how-to-use-trust-policies-with-iam-roles/" target="_blank">trust policy</a> defines who is allowed to assume the role and under what conditions. It explicitly lists <strong>trusted principals</strong> (AWS accounts, IAM users, roles, or federated identities) and may include conditions such as MFA requirements, specific source IPs, or external IDs to mitigate confused deputy attacks. From a security standpoint, this is the primary control plane boundary: <strong>even if an identity has permission to call sts:AssumeRole</strong>, it will be <strong>denied unless the target role's trust policy allows it.</strong></p>
+                <p>In addition, resource-based policies extend this concept beyond roles to services like S3, KMS, and Lambda. These policies are attached directly to resources and define which principals can access them, often across accounts.</p>
+                <p>In cross-account scenarios, <strong>effective access</strong> typically requires both sides to align: the <strong>calling identity</strong> must have an <strong>identity-based policy allowing the action</strong>, and the <strong>target resource</strong> must <strong>explicitly trust that principal</strong>. In large company environments, this is a common vector of misconfiguration.</p>
+                <div class="note"><strong>Remark:</strong> Access Control Lists (ACLs) are a legacy access control mechanism primarily used in Amazon S3 to grant basic permissions to other AWS accounts or predefined groups. They can be used for cross-account access, but they are not the recommended or primary method for doing so. In modern AWS architectures, use <strong>resource-based policies</strong> combined with IAM roles and trust policies.</div>
+                <p>The <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html" target="_blank">confused deputy</a> problem is a security issue where an entity that doesn't have permission to perform an action can <strong>coerce a more-privileged entity to perform the action</strong>. For example, a client setup an infrastructure where CloudTrail logs are poured from a foreign AWS account in a local S3 bucket, a trust policy will be set that the foreign AWS account is <strong>trusted</strong> and a <strong>resource-based policy will be set locally that authorized</strong> the <a href="http://cloudtrail.amazonaws.com" target="_blank">cloudtrail.amazonaws.com</a> service <strong>globally</strong>, meaning that the local CloudTrail service is allowed too as on <strong>services</strong>, <strong>AWS accounts can not be specified without using a Condition in the policy</strong>. Therefore, an S3 bucket that trusts the CloudTrail service principal with <strong>no conditions</strong> could receive CloudTrail logs from the foreign AWS accounts that a <strong>trusted admin configures</strong>, but <strong>also CloudTrail logs from an unauthorized actor</strong> in their (<strong>local</strong>) AWS account, if they know the name of the S3 bucket.</p>
+                <p>Last but not least, <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html" target="_blank">iam:PassRole</a> is about <strong>letting a service use a role on your behalf</strong>. iam:PassRole is particularly sensitive because an attacker can leverage it to indirectly <strong>gain access to permissions they are not explicitly granted</strong>. Instead of assuming a high-privileged role directly (which may be restricted by trust policies), an attacker can <strong>pass that role to an AWS service</strong> they control such as <strong>creating a Lambda function or launching an EC2 instance with the attached role</strong>. Once the service is running, the attacker can interact with it (invoke the Lambda or execute commands on the instance) and <strong>effectively perform actions using the role's permissions</strong>.</p>
+                <p>To conclude, IAM is a frequent source of privilege escalation, as large-scale environments increase complexity and make misconfigurations more likely to occur, as a result the principle of least privilege should be applied.</p>
+            </section>
+
+            <!-- Tools of the trade -->
+            <section id="tools">
+                <h2>III. Tools of the trade</h2>
+                <p>This part will speak about <strong>useful tools</strong> in cloud environments and will give a break in this article.</p>
+                <p>The first tool to speak about is the <a href="https://docs.aws.amazon.com/streams/latest/dev/setup-awscli.html" target="_blank">AWS Command Line Interface</a> (CLI) which considerably facilitates administrative tasks through AWS as it allows <strong>automation</strong>. Using the CLI is a gain of time, on top of that, AWS is provided with well <a href="https://docs.aws.amazon.com/cli/latest/reference/" target="_blank">written documentation</a> that is <strong>intuitive</strong> and fast to browse.</p>
+                <p>As the CLI output mostly uses the <strong>JSON</strong> format, a tool like <a href="https://jqlang.org/" target="_blank">JQ</a> that makes the selection and filtering of JSON data easier is an essential asset to have.</p>
+                <p>As you might know, <strong>Infrastructure as Code</strong> (IaC) enables to have a scalable environment that is easy to deploy where everything is backed up as the code can be redeployed anytime. Tools such as <a href="https://developer.hashicorp.com/terraform" target="_blank">Terraform</a> or <a href="https://opentofu.org/" target="_blank">Tofu</a> (open source) must be used.</p>
+                <p>By now, you should understand that it is an environment conducive to <strong>Python</strong> for automation tasks. In this matter, I highly recommend to use the <a href="https://docs.astral.sh/uv/getting-started/installation/#installation-methods" target="_blank">UV</a> Python <strong>packet manager</strong> which creates the environment <strong>instantly</strong> in the Python 3 version of your choice:</p>
+                <pre><code>uv python install 3.11
+uv venv // Activate the venv after
+uv pip install -r requirements.txt
+uv run python myscript.py</code></pre>
+                <p>For <strong>security purposes</strong>, the <a href="https://github.com/nccgroup/ScoutSuite" target="_blank">ScoutSuite</a> tools automates the audit of cloud environments.</p>
+                <div class="note"><strong>Remark:</strong> An AI Chatbot is a great <strong>ally</strong> to find a command, however, I noticed that sometimes the Chatbot hallucinates and invent arguments in commands, so make sure to double check with the CLI documentation.</div>
+
+                <h3>IaC Security</h3>
+                <p>IaC security should be addressed as IaC is usually stored by CI/CD teams on a Git-based solution such as an internal <strong>GitLab</strong>, <strong>BitBucket</strong>, etc. First, those solutions should only <strong>authorize necessary identities</strong> applying the principle of least privileges as multiple roles exist in GitLab like read-only accesses. Additionally, IaC should not be a public project.</p>
+                <p>On the other hand, IaC should not contain any hardcoded secrets as if the Git repository is compromised, it could compromise the deployed infrastructure as well. To counter this type of vulnerabilities a linting solution can be adopted to check the syntax of the IaC code.</p>
+                <p>The following references can be used to adjust security based on your needs:</p>
+                <ul>
+                    <li><a href="https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/infrastructure-as-code-design" target="_blank">Architecture strategies for using infrastructure as code - Microsoft Azure Well-Architected Framework | Microsoft Learn</a></li>
+                    <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Infrastructure_as_Code_Security_Cheat_Sheet.html" target="_blank">Infrastructure as Code Security - OWASP Cheat Sheet Series</a></li>
+                </ul>
+            </section>
+
+              <!-- Infrastructure protection -->
+        <section id="infra-protection">
+            <h2>IV. Infrastructure protection</h2>
+
+            <h3 id="exposure">A. Exposure of cloud management consoles</h3>
+            <p>By default, the AWS administration console is <strong>exposed on the Internet</strong>. It is nevertheless possible to implement network access control to reduce this exposure via conditional access rules in <strong>Azure</strong> or <strong>IAM policy conditions</strong> in AWS such as using an SCP that applies to the whole organization.</p>
+            <p>Or using <strong>Azure conditional access</strong> if <strong>EntraID</strong> is the only source of identity as it will prevent users from logging if they possess an untrusted IP.</p>
+
+            <h3 id="network">B. Network security</h3>
+            <p>AWS comes with full network capabilities such as <strong>Virtual Private Cloud</strong> (VPC) which are specific to cloud environments and permit to deploy <strong>private</strong> networks inside a cloud.</p>
+            <p>The main goal of a cloud network assessment is to find <strong>segmentation default</strong> in the deployed infrastructure based on the theoretical model initially conceived.</p>
+            <p>Out of all models that exists, some typologies remain predominant such as:</p>
+            <ul>
+                <li><strong>Hub and spoke</strong>: A central VPC (hub) connected to multiple sub-VPCs (spoke), where traffic is centralized to the hub implementing most of the security measures.</li>
+                <li><strong>Mesh</strong>: All the VPCs are directly connected to each other.</li>
+                <li><strong>N-tier</strong>: A famous variation of this typology is the 3-tier architecture with the separation of the frontend (web), backend (api or microservice) and database. This architecture is popular in web environments.</li>
+                <li><strong>Hybrid cloud</strong>: A cloud connected to an on-premises network and infrastructure.</li>
+                <li><strong>Trust zones architectures</strong>: It is a way to conceive a network separating it depending on the level of trust or risk granted to a zone. Usually there is a public zone (Internet), a DMZ, an internal zone, a sensitive zone and a management zone.</li>
+            </ul>
+            <p>Most of the time, the <strong>Hub and Spoke model is implemented</strong> with a mix of the other concepts.</p>
+            <div class="note"><strong>Remark:</strong> As the <strong>Hybrid</strong> cloud model exists, there is a <strong>multi-cloud</strong> model that exists too, which is an inter-connection with another cloud provider such as Azure or GCP. This model limits the dependency of a cloud provider, but it also <strong>opens lateralization doors for malicious actors to pivot to another environment.</strong></div>
+            <p>A state of the art concept is the <strong>microsegmentation</strong> that consists in segmenting networks in <strong>small segments</strong> in order to have a tight security control on them. We will come back to this concept at the end of the section.</p>
+            <p>Before starting speaking of implementation, it is needed to define some terms used in cloud networking:</p>
+            <ul>
+                <li><strong>East-West</strong> connectivity: This is the internal traffic of applications in the boundaries of a network.</li>
+                <li><strong>North-South</strong> connectivity (external): This is the traffic that enters and leaves a network, in more technical terms the incoming traffic (Ingress) and the outgoing traffic (Egress).</li>
+                <li><strong>On-premises</strong>: This is traffic in local infrastructure which is not in the cloud, and usually which is more tangible.</li>
+            </ul>
+            <p>So, the core of networking is to make possible the communications between multiple entities, moreover networks implement security by design as they control who can communicate with who. To implement a secure networking base infrastructure in an AWS account, multiple mechanisms can be used:</p>
+            <ul>
+                <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html" target="_blank">Virtual Private Cloud</a> (VPC) which are private networks on the cloud.</li>
+                <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-peering.html" target="_blank">VPC peering</a> to connect two VPCs.</li>
+                <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html" target="_blank">NAT gateways</a>, <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html" target="_blank">routing tables</a> and <a href="https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html" target="_blank">subnets</a>. Routing tables only apply to subnets in AWS.</li>
+                <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html" target="_blank">Security groups</a> which permit to specify Ingress and Egress rules attached to an <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html" target="_blank">Elastic Network Interface</a> (ENI) that only applies to workloads such as EC2 instances, Elastic Load Balancers (ELB), etc.</li>
+                <li>AWS <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html" target="_blank">Private Link</a> that is used to make communications over the AWS backbone network.</li>
+                <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html" target="_blank">Network Access Control List</a> (NACL) that apply to subnet en AWS and specify if the traffic is authorized or denied.</li>
+                <li>AWS Shield and AWS WAF which protects from common threats of the Internet and AWS <a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html" target="_blank">Network Firewall</a> that is used for advanced filtering.</li>
+                <li>AWS <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html" target="_blank">Direct Connect</a> to connect an on-premises network and AWS <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html" target="_blank">Site-to-Site VPN</a> to connect two distinct networks.</li>
+                <li>AWS <a href="https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html" target="_blank">Transit Gateway</a> that enables to concentrate traffic from sources of multiple nature (VPCs, SDWAN, Direct Connect, VPN, etc.). It acts like a hub.</li>
+            </ul>
+            <p>Those security mechanisms should be implemented depending on your infrastructure and the context of the company.</p>
+            <p>That said, network components can be identified by their <strong>prefix</strong> in AWS:</p>
+            <ul>
+                <li><strong>vgw</strong>-XXXXXXX for Virtual Private gateways.</li>
+                <li><strong>pcx</strong>-XXXXXXX for VPC peering.</li>
+                <li><strong>igw</strong>-XXXXXXX for Internet gateway</li>
+                <li><strong>pl</strong>-XXXXXXX for <a href="https://docs.aws.amazon.com/vpc/latest/userguide/working-with-managed-prefix-lists.html" target="_blank">prefix list</a> which reusable CIDR ranges.</li>
+                <li><strong>sgr</strong>-XXXXXXX for Security Group rules.</li>
+                <li><strong>rtb</strong>-XXXXXXX for Routing tables.</li>
+                <li><strong>acl</strong>-XXXXXXX for Network ACL.</li>
+                <li><strong>eni</strong>-XXXXXXX for Elastic Network Interface.</li>
+                <li><strong>tgw</strong>-XXXXXXX for Transit Gateway.</li>
+            </ul>
+            <p>With this in mind, it is easier to understand an existing infrastructure.</p>
+            <p>A base network infrastructure can be conceived in an AWS account in which the network configuration can be <strong>shared</strong> via AWS <a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html" target="_blank">Resource Access Manager</a> to have the <strong>same base</strong> in every account <strong>ensuring that this configuration is hardened</strong>.</p>
+            <p>The possibility to share a network configuration in your Landing Zone simplifies the development of the Hub and Spoke model: <a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_planning_network_topology_prefer_hub_and_spoke.html" target="_blank">REL02-BP04 Prefer hub-and-spoke topologies over many-to-many mesh - Reliability Pillar</a></p>
+            <div class="diagram-placeholder">[Diagram: Hub-and-spoke topology with shared network resources]</div>
+            <p><strong>RAM</strong> can be used to share the <strong>transit gateway</strong> information, the <strong>CIDR ranges</strong> via <strong>prefix lists</strong>, the <strong>subnets</strong> and <strong>routing tables</strong> of the Hub account and all the spoke accounts.</p>
+            <p>The <strong>security is focused in the Hub</strong> in this model as all the traffic passes by this element, thus, the Hub should implement <strong>Network Firewalls</strong>, <strong>NAT Gateways</strong>, <strong>IDS</strong>/<strong>IPS</strong> <strong>systems</strong>, a <strong>network probe</strong> (Vectra) and <strong>systematic logging</strong> of the traffic.</p>
+            <p>On the other hand the <strong>spokes</strong> should implement <strong>security groups</strong>, <strong>NACL</strong> and <strong>resource hardening</strong>. This is where you should have a tightened perimeter security to ensure network <strong>partitioning</strong> and to respect the initially conceived <strong>segmentation</strong>.</p>
+            <p>Functionally, the <strong>Hub</strong> is an <strong>AWS account</strong> that is <strong>dedicated to this purpose</strong> and spokes are also AWS accounts. In which, the Hub account concentrates most of the security protections.</p>
+            <div class="note"><strong>Remark:</strong> <strong>Security Groups</strong> are only attached to <strong>ENI</strong> (Elastic Network Interfaces) which are network interfaces of workloads (EC2 instances, ELB). As a result, SGs acts as a level 4 (OSI) firewall which can control the traffic until which port is allowed or denied. Moreover, SGs have a VPC ID attribute because they are defined in the context of a VPC, therefore they are not global.</div>
+            <p>If you implement a DMZ to expose services on the Internet, AWS Shield which protects against Denial of Service attacks and AWS WAF which protects against applicative attacks can be useful. Otherwise, a classic <strong>CDN</strong> such as <strong>CloudFlare</strong> or <strong>Akamai</strong> is a great alternative as exposed services will benefit from enhanced security protections.</p>
+            <p>As a hardening measure on public exposition, it is important to monitor that private elements such as <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-internet-facing-load-balancers.html" target="_blank">ELBs</a>, <a href="https://docs.aws.amazon.com/AmazonRDS/latest/gettingstartedguide/security-public-private.html#security-public" target="_blank">RDS databases</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses" target="_blank">EC2 instances</a>, <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html" target="_blank">S3 buckets</a> and <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-api-migration.html" target="_blank">API gateways</a> are <strong>not publicly exposed since they implement an option to be exposed publicly</strong>.</p>
+            <p>Additionally, a bastion or jump server can be deployed to access sensitive zones on AWS, however in modern AWS environments <strong>SSM is preferred</strong> because it uses the backbone network of AWS, as a result, nothing is exposed on the Internet (an SSH service for example for a bastion).</p>
+            <p>To finish, a recent concept has been emerging which is <a href="https://techdocs.akamai.com/guardicore-platform-agent/docs/welcome" target="_blank">Microsegmentation</a>. Microsegmentation permits networks in <strong>restrained segments</strong> and applies granular controls to each one. The goal of microsegmentation is to <strong>isolate workloads</strong> and <strong>apply specific policies to them with the aim of limiting lateral movements.</strong></p>
+
+            <h3 id="workload">C. Workload security and resource hardening</h3>
+
+            <h4 id="imds">1. IMDSv1 vs IMDSv2</h4>
+            <p>To apply the <strong>principle of defense in depth</strong>, it is necessary to <strong>harden the configuration</strong> of resources. Security requirements can be defined at the organizational level.</p>
+            <p>In the Amazon Web Services ecosystem, the instance metadata service (IMDS) plays a key role by allowing Amazon EC2 machines to access local information such as their configuration, their IAM role, or their <strong>temporary credentials</strong>. The first version, IMDSv1, is based on a simple model relying on <strong>unauthenticated</strong> HTTP requests, accessible from the instance via a local address. Although convenient, this approach has security limitations. In particular, when an EC2 instance is created with an attached role, it is possible to retrieve the <strong>credentials of this role from the IMDS endpoint exposed on the AWS backbone at http://169.254.169.254</strong>. Therefore, if one of these instances is publicly exposed and has an <strong>SSRF</strong> (Server-Side Request Forgery) vulnerability allowing requests to be made on the AWS backbone by impersonating the EC2 instance, <strong>an attacker would be able to obtain initial access to the environment.</strong></p>
+            <p>To address these issues, <strong>IMDSv2</strong> introduces a more robust mechanism based on the use of temporary tokens (session tokens). Before being able to access metadata, a request must first obtain a valid token, which <strong>adds a layer of protection</strong> against unauthorized access. This evolution makes exploitation via SSRF much more difficult.</p>
+
+            <h4 id="instance-profile">2. EC2 instance profile</h4>
+            <p>In the Amazon Web Services ecosystem, instance profiles are a fundamental mechanism used to securely grant permissions to Amazon EC2 instances through <strong>IAM roles</strong>. An instance profile acts as a container for an IAM role that is attached to an EC2 instance, allowing applications running on the instance to automatically obtain temporary credentials without the need to embed static access keys. However, from a hardening and defense-in-depth perspective, it is crucial to apply the <strong>principle of least privilege</strong> when defining these roles. Overly permissive instance profiles can become a critical attack vector: if an attacker gains access to a compromised instance, especially one <strong>exposed publicly</strong>, they may be able to retrieve temporary credentials via the metadata service and escalate their access within the environment.</p>
+
+            <h4 id="cloudformation">3. CloudFormation: Stack & StackSet</h4>
+            <p>AWS <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-overview.html" target="_blank">CloudFormation</a> plays a central role in <strong>automating infrastructure deployment</strong> through <strong>templates</strong>, whether via <strong>individual stacks</strong> or at scale using <strong>StackSets</strong>. A CloudFormation stack represents a <strong>collection</strong> of AWS resources that are created, updated, and <strong>managed together as a single unit based on a template</strong>. A CloudFormation stack <strong>operates with the permissions of the user or service role that creates it</strong>, meaning that overly permissive roles can lead to unintended privilege escalation or the deployment of insecure resources. StackSets extend this capability by enabling the deployment of the <strong>same stack across multiple accounts and regions</strong> from a central administrator account. StackSets, which allow deployments across multiple accounts and regions, if not properly controlled a misconfiguration can propagate at scale.</p>
+
+            <h4 id="flaws">4. Flaws.cloud : Study-case of a website takeover</h4>
+            <p>In this part, we will explore a challenge named <a href="http://flaws.cloud/" target="_blank">flAWS</a> which is a public. Another great existing challenge is <a href="https://github.com/RhinoSecurityLabs/cloudgoat" target="_blank">CloudGoat</a>.</p>
+            <p>The challenge starts off with a <strong>reverse DNS lookup</strong> that reveals that the website is hosted in a S3 bucket in AWS. I invite you to check the previous article I made on DNS and Dig : <a href="https://eyilink.github.io/articles/dns_extraction_article.html" target="_blank">DNS Extraction Debugging with Dig</a>.</p>
+            <p>This bucket allows public read rights which means that the bucket can be listed using the <code>--no-sign-request</code> argument which is used to <strong>specify to not use AWS credentials</strong> to access the bucket.</p>
+            <p>However, one hidden file is not visible for <strong>Everyone</strong> (public access) but accessible being an <strong>Authenticated User</strong> which means any user authenticated on AWS. This file leads to another S3 bucket that contains a <code>.git</code> file.</p>
+            <p>This git file contains credentials in one of the <strong>commits</strong>. However to download hidden files <code>aws s3 sync</code> command has to be used. Once the <code>.git</code> folder is accessible locally, commits can be consulted with the <code>git log</code> command and the user can <strong>checkout</strong> to a commit using <code>git checkout</code>. After which credentials are retrieved by searching for AWS keys (tips: search first in recent files).</p>
+            <div class="note"><strong>Remark:</strong> The site could be hosted on an EC2 instance, therefore credentials of EC2 instance roles are stored on the metadata endpoint (<a href="http://169.254.169.254" target="_blank">http://169.254.169.254</a>) on AWS backbone. If an <strong>SSRF</strong> vulnerability that allows to read the content of the crafted request appears on this type of application, an AWS identity could be retrieved and <strong>permitted to pivot on the company's AWS environment.</strong></div>
+            <p>As credentials probably tied to a developer identity were retrieved, the profile should be able to make <strong>additional actions</strong>. Indeed the profile allows to list EC2 EBS snapshots which are snapshots of volumes (data at rest) :</p>
+            <pre><code>aws ec2 describe-snapshots --owner-id &lt;id_of_the_proprietary_account&gt;</code></pre>
+            <p>This volume can then be restored:</p>
+            <pre><code>aws ec2 describe-snapshots --availability-zone &lt;AZ_where_volume_available&gt; --snapshot-id snap-&lt;id_of_snapshot&gt;</code></pre>
+            <p>As the harvested profile has the right to create an EC2, it can create one and associate a KMS key to authenticate against it and then <strong>mount the volume</strong>.</p>
+            <p>Once this step is done, the volume mounted contains an application vulnerable to SSRF with which the IMDS endpoint can be queried and <strong>credentials will be retrieved</strong> as mentioned previously.</p>
+            <p>For the final step, the retrieved user has SecurityAudit policy attached to it that allows a lot of <code>Describe\*</code>, <code>List\*</code> and <code>Get\*</code> operations, having an almost administrator read only privileges. Thus, IAM policies might be accessible:</p>
+            <pre><code>aws iam get-user
+aws iam list-attached-user-policies --user-name &lt;username&gt;
+aws iam list-user-policies --user-name &lt;username&gt;
+aws iam get-policy --policy-arn &lt;policy_arn&gt;
+aws iam get-policy-version --policy-arn &lt;policy_arn&gt; --version-id v4</code></pre>
+            <p>After which, we have the GET right on API Gateways which means we can list and query them. We start enumerating <strong>Lambda</strong> functions:</p>
+            <pre><code>aws lambda list-functions
+aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
+            <p>In the ARN of the resource we identify a REST API ID. The associated API Gateway can be enumerated (which will reveal the StageName) :</p>
+            <pre><code>aws apigateway get-stages --rest-api-id &lt;rest_api_id&gt;</code></pre>
+            <p>At this point, last level URL can be crafted by using : <code>https://&lt;rest_api_id&gt;.execute-api.us-west-2.amazonaws.com/&lt;stage_name&gt;</code></p>
+            <p>End of the challenge, well done !</p>
+
+            <h4 id="persistence">5. Persistance on AWS</h4>
+            <p>Persistence mechanisms rely less on traditional malware and more on the abuse of <strong>native control plane features</strong> making them <strong>stealthy</strong> and durable. For instance, IAM <strong>trust relationships</strong> can be manipulated to allow external principals or attacker-controlled accounts to assume roles, effectively establishing persistence through federation paths rather than static credentials. Similarly, the misuse of <strong>NotAction</strong> in IAM policies can create hidden persistence because NotAction allows <strong>all actions except those explicitly denied</strong>, it may grant attackers broad permissions while appearing restrictive.</p>
+            <p>Other techniques involve compute and service level abuse. Malicious AWS <strong>Lambda layers</strong> can be injected into existing functions, allowing attackers to persist code execution within legitimate serverless workflows. In parallel, an attacker controlling an Amazon EC2 instance may establish a reverse SOCKS proxy, maintaining covert network access even in restricted environments. Additionally, while not strictly persistence, creating ELB <strong>snapshots</strong> of attached volumes can allow attackers to recover sensitive data including <strong>credentials potentially stored in memory</strong> such as cloud credentials on disk extending their access capabilities beyond the initial compromise.</p>
+            <div class="note"><strong>Remark:</strong> Snapshots <strong>does not permit saving RAM memory</strong>, meaning credentials could not be retrieved using this mean such as domain credentials in LSASS. However, cloud credentials could be retrieved in the ~/.aws/credentials file if configured.</div>
+            <p>From a detection evasion standpoint, attackers may also target logging and monitoring services such as <strong>CloudWatch</strong> and <strong>CloudTrail</strong> by <strong>disabling</strong>, altering, or restricting log collection. At a higher level, if an attacker is able <strong>to remove or detach a member account from an AWS Organizations organization</strong> or operate from an account they control outside the organization, they can <strong>effectively evade Service Control Policies</strong> (SCPs). In this scenario, the account is no longer bound by the organization's governance, allowing the attacker to perform actions that would normally be restricted.</p>
+            <p>All of those techniques are detailed in the following article: <a href="https://www.riskinsight-wavestone.com/2025/09/awsdoor-persistance-sur-aws/" target="_blank">Persistance sur AWS</a></p>
+
+            <h4 id="containers">D. Virtualized and containerized environments in the cloud</h4>
+            <p>This part will only be brief as virtualized and containerized environments are a vast subject.</p>
+            <p>First of all, AWS integrates the capacity to deploy virtual instances known as EC2. EC2 instances can be provided a managed image or a custom image which are called <strong>Amazon Machine Image</strong> (AMI). It is recommended to deploy a custom image by creating a <strong>generic one for each nature of deployed machines</strong> (Linux and Windows) which contains an <strong>EDR</strong> solution (Crowdstrike, Sentinel1, Wazuh, etc.) by default.</p>
+            <p><strong>Virtualization</strong> and <strong>containerization</strong> are two popular technologies used in modern software development and deployment. Both technologies offer ways to abstract and isolate applications from the underlying hardware with one important particularity on the <strong>isolation</strong>. Containers <strong>share the kernel of the host operating system</strong> meaning that system calls originating from a container will execute on the host, compared to virtual machines that run its <strong>own guest operating system</strong> ensuring isolation between the guest and the host. The drawbacks of running its own operating system is that it is consuming more resources than containers.</p>
+            <div class="note"><strong>Remark:</strong> <strong>Containers need a Linux kernel to be executed</strong>. That's why on Windows a light Linux virtual machine which is called Windows Subsystem for Linux (<a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">WSL2</a>) exists and is required to execute Docker.</div>
+            <p>In large modern environments where thousands of containers can be deployed, solutions such as <strong>Kubernetes</strong> that is an <strong>orchestrator</strong> for containers and <strong>Openshift</strong> that is a <strong>Platform as a Service</strong> (PaaS) that uses Kubernetes as its <strong>engine</strong> and integrates security by design, are usually encountered.</p>
+            <p>Nonetheless, AWS provides an implementation of Kubernetes in the cloud in order to orchestrate containers which benefit from the cloud environments features and resources, this service is called <a href="https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html" target="_blank">Elastic Kubernetes Service</a> (EKS) which offers an easy to use and <strong>AWS managed underlying infrastructure</strong>.</p>
+            <p>Kubernetes, Openshift or EKS need a <strong>physical cluster</strong> in order to host deployed containers and to manage performances of workloads. A physical cluster is often composed of multiple physical machines called <strong>nodes</strong> in which some of them host the <strong>control plane</strong> meaning they give orders to other nodes and orchestrate the cluster, those nodes are known as <strong>master nodes</strong>. On the other side, nodes that host the <strong>data plane</strong> and execute tasks are known as <strong>worker nodes</strong>. Moreover, each physical cluster can be divided into <strong>logical clusters</strong> known as <strong>namespaces</strong> which provide logical isolation of resources.</p>
+            <div class="note"><strong>Remark:</strong> <strong>Kubernetes namespaces are different from Linux namespaces</strong> used by Docker. Kubernetes namespaces are only logical, on the other hand, Docker uses namespaces to isolate processes in between containers and cgroups to restrain consumed resources.</div>
+            <p>AWS also integrates capabilities to only work with Docker such as <a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html" target="_blank">Elastic Container Registry</a> which is an image registry and <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html" target="_blank">Elastic Container Service</a> (ECS) which is used to orchestrate containers.</p>
+            <p>However, the best modern artifact registry is <a href="https://jfrog.com/blog/what-is-artifactory-jfrog/" target="_blank">Artifactory</a> because it takes into account a variety of artefacts (Docker, Maven, NPM, PyPi, NuGet, Helm Charts, etc.) and it integrates with CI/CD pipelines by <strong>versioning</strong> artefacts, resolve build dependencies and supports modern authentication methods. Artifactory can be integrated in cloud environments.</p>
+        </section>
+
+        <!-- Detection capabilities -->
+        <section id="detection">
+            <h2>V. Detection capabilities</h2>
+            <p><strong>Detection</strong> is one of the prime factors of security in cloud environments. The first step of detection is <strong>logging</strong> to ensure that all the scope is covered and <strong>poured into a log sink</strong> used by the <a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-siem" target="_blank">SIEM</a>, in order to not forget any blind spot that could be used by an attacker.</p>
+            <p>For this purpose, <a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html" target="_blank">CloudTrail</a> is mainly used. <strong>CloudTrails logs all API calls made to the AWS API</strong> and usually pours the log in an <strong>S3 bucket</strong>. The management of CloudTrail can be <strong>delegated to another AWS account</strong> which its sole purpose will be to administrate CloudTrail. As an additional measure, it is highly advised to <strong>configure an SCP that prevents anyone from modifying the organization trail.</strong></p>
+            <p>On the other hand, <a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html" target="_blank">Config</a> is used to <strong>monitor configuration changes</strong> of resources (EC2, S3, etc.), its first purpose is for auditing but it can monitor configuration deviation and each change is automatically registered into an <strong>S3 bucket</strong> or can be sent to CloudWatch.</p>
+            <p>Other sources of logs are as follows:</p>
+            <ul>
+                <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html" target="_blank">VPC Flow Logs</a> which are <strong>VPC network traffic</strong> logs.</li>
+                <li><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/logging-monitoring.html" target="_blank">DNS Resolver Logs</a> which are logs provided by the <strong>DNS service</strong> which is <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html" target="_blank">Route 53</a>.</li>
+                <li><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html" target="_blank">Elastic Load Balancer logs</a> which are various types of logs provided by <strong>AWS load balancers.</strong></li>
+                <li><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html" target="_blank">CloudFront</a> (optional) which is AWS Content Distribution Network (CDN).</li>
+                <li><a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-incident-response.html" target="_blank">AWS WAF logs</a> (optional) which are less common to encounter.</li>
+                <li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/implementing-logging-monitoring-cloudwatch/kubernetes-eks-logging.html" target="_blank">EKS Control Plane logs</a> that can only be consumed by CloudWatch but once consumed can be relayed to a bucket.</li>
+            </ul>
+            <p>Once an abundant number of logs sources are poured into the log sink which is commonly an S3 bucket, it is important to <strong>protect existing logs</strong> to ensure the <strong>integrity</strong> and <strong>traceability</strong> of them.</p>
+            <p>Aiming this, the <strong>organization trail</strong> in the CloudTrail service should support <strong>encryption at rest</strong> and implement a <strong>long retention period</strong> such as below:</p>
+            <table>
+                <thead>汽<th>Name</th><th>Encryption</th><th>Integrity</th><th>Retention period</th> </thead>
+                <tbody><tr><td>Organization-trail</td><td>SSM-KMS</td><td>Enabled</td><td>2 years</td> </tr>
+                </tbody>
+            </table>
+            <p>The <strong>integrity check</strong> permits the integrity of archives poured into the S3 bucket.When enabled, <strong>AWS signs archives delivered to the S3 log sink</strong> with AWS <strong>private key</strong>. As a result, if log archives are modified, it enables to <strong>check that they have been modified</strong> as the signature does not match the initial one.</p>
+            <p><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html" target="_blank">SSE-KMS</a> is the use of the <a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank">KMS</a> service typically used for <strong>asymmetric encryption</strong> on AWS and SSE stands for Server Side Encryption. This combination allows a <strong>robust encryption</strong> of log archives at rest.</p>
+            <p>As previously mentioned, logs are poured into an S3 bucket which hosts log archives of all sources. Hence, this bucket should be strongly protected. First, attributes of rights of the bucket can be configured:</p>
+            <table>
+                <thead>汽<th>Name</th><th>Object ownership</th><th>Bucket policy</th> </thead>
+                <tbody><tr><td>logs_bucket</td><td>Bucket owner preferred</td><td>logs_bucket_policy.json</td> </tr>
+                </tbody>
+            </table>
+            <p>The <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html" target="_blank">Object Ownership</a> defines who has the <strong>ownership of the uploaded archive</strong> on the S3 bucket. The entity that has the ownership on a bucket can <strong>manipulate it to its convenience</strong> such as modifying, creating and deleting data and the archive itself. Two values can be configured for this attribute:</p>
+            <ul>
+                <li><strong>Bucket owner</strong> preferred: Which means that the AWS account in which the bucket is contained has ownership on all the archives present inside the same bucket.</li>
+                <li><strong>Object owner</strong> preferred: Which means that if the archive is sent from a foreign AWS account, this same account has ownership on the archive that is placed in the bucket containing logs.</li>
+            </ul>
+            <p>The <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-policies.html" target="_blank">bucket policy</a> defines permissions of an entity or identity on the bucket and its content, which is a <strong>resource-based policy</strong>. The JSON document of the bucket policy has the same format as an IAM policy, meaning the same claims, statements and verbs are used.</p>
+            <div class="note"><strong>Remark:</strong> ACLs are a legacy mechanism that was used to control the access of objects inside the buckets. Thus, they are <strong>deprecated</strong>.</div>
+            <p>In a second place, <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/DataDurability.html" target="_blank">data protection attributes</a> of the S3 bucket can be configured:</p>
+             <table>
+                <thead><tr><th>Name</th><th>Encryption</th><th>Versioning</th><th>MFA delete</th><th>S3 locks</th></tr></thead>
+                <tbody><tr><td>logs_bucket</td><td>SSM-KMS</td><td>Enabled</td><td>Enabled</td><td>Enabled : 2 years</td></tr></tbody>
+             </table>
+            <p>As previously seen, the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html" target="_blank">SSE-KMS</a> encryption is used.</p>
+            <p>The <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html" target="_blank">Versioning</a> attribute of the bucket is set to enabled meaning that <strong>each past version of objects will be stored.</strong></p>
+            <p>The <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html" target="_blank">MFA delete</a> specifies that if the <strong>bucket owner wants to delete a version of the bucket</strong>, he will need a second factor in the authentication process in order to do so, such as providing a MFA code to delete a particular version.</p>
+            <p>On the other hand, <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock-configure.html" target="_blank">S3 locks</a> permits to <strong>lock the object for a determined period of time which prevents deletion or replacement.</strong></p>
+            <p>Once the log sink is secure and ensures log integrity, <strong>detection rules</strong> can be configured on AWS using the <strong>CloudWatch</strong> service and <strong>GuardDuty</strong>. <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html" target="_blank">Cloudwatch</a> enables to set alerts in AWS environments that are triggered by a <strong>pre-defined thresholds</strong>. Otherwise, <strong>GuardDuty</strong> is the <strong>main mechanism for detection in AWS</strong> if no external solution is used, since it can <strong>consume all previously mentioned log sources</strong> if set correctly enabled in the <strong>protection plan</strong>. GuardDuty can detect threats using <strong>Detector</strong> (detection rules) which will create <strong>Findings</strong> that can be visualized in GuardDuty console. An interesting mechanism is <strong>Attack Sequence</strong> which allows correlating events in order to detect a threat.</p>
+            <p>Nonetheless, in large environments, an <strong>external solution</strong> such as <a href="https://docs.cloud.google.com/chronicle/docs/overview?hl=fr" target="_blank">Google Security Operations SIEM</a>, <a href="https://www.ibm.com/fr-fr/products/qradar" target="_blank">QRadar</a>, <a href="https://www.splunk.com/" target="_blank">Splunk</a> or <a href="https://www.elastic.co/fr/elastic-stack/" target="_blank">Elastic SIEM</a> should be used to consume data present in the S3 bucket.</p>
+            <p>To finish, <strong>EDRs</strong> should be implemented in all OS instances that support it and can be integrated as another source of logs into the chosen SIEM.</p>
+            <p>All of the measures seen in this section should ensure that logging does not leave behind any blind spot and that logs are safely transported to the SIEM solution.</p>
+        </section>
+
+        <!-- Data Protection -->
+        <section id="data-protection">
+            <h2>VI. Data protection</h2>
+            <p>In this part, data protection will be aborted in a broader scope.This section will be organized in four parts:</p>
+            <ol>
+                <li><strong>Keys and secrets rotation</strong></li>
+                <li><strong>Encryption at rest</strong></li>
+                <li><strong>Encryption in transit</strong></li>
+                <li><strong>Backups and resilience</strong></li>
+            </ol>
+            <p>The first verification to be aware of are <strong>permanent</strong> IAM users <strong>access keys rotations</strong>, even though it is not recommended using permanent access keys. <a href="https://docs.aws.amazon.com/config/latest/developerguide/access-keys-rotated.html" target="_blank">Rotation</a> can be done using AWS <strong>Config</strong>. To check if access keys have been rotated <strong>the date they have been activated can help</strong> to find the actual span of time in which they were in use.</p>
+            <p><a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html" target="_blank">SSM secrets</a> should be <strong>rotated</strong> as well. SSM implements by default an <strong>attribute to specify the rotation span.</strong></p>
+            <p><a href="https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html" target="_blank">KMS</a> implements the same mechanism to <strong>rotate keys</strong>. It is recommended to rotate keys regularly such as described by <a href="https://aws.amazon.com/iam/resources/best-practices/" target="_blank">AWS Best Practices</a>.</p>
+            <p>For <strong>encryption at rest</strong>, an important number of resources allow to <strong>specify as an option if data should be encrypted at rest</strong>. Those resources are as follows:</p>
+            <ul>
+                <li><strong>EBS volume</strong> (Elastic Block Store) : A virtual hard drive attached to EC2 instances, providing persistent block-level storage.</li>
+                <li><strong>S3 bucket</strong> (Simple Storage Service) : An object storage container for files with high durability and scalability.</li>
+                <li><strong>SNS topic</strong> (Simple Notification Service) : A publish-subscribe messaging channel that distributes messages to subscribers.</li>
+                <li><strong>SQS queue</strong> (Simple Queue Service) : A message queue for asynchronous communication between distributed systems.</li>
+                <li><strong>RDS</strong> (Relational Database Service) : Managed relational database service supporting engines like MySQL, PostgreSQL, and Aurora.</li>
+                <li><strong>EBS snapshots</strong> : Backup copies of EBS volumes stored in S3 for recovery or creating new volumes.</li>
+                <li><strong>Redshift</strong> : Managed cloud data warehouse optimized for analytics and large-scale queries.</li>
+                <li><strong>DynamoDB</strong> : Fully managed, serverless NoSQL database with high performance at scale.</li>
+                <li><strong>EMR</strong> (Elastic MapReduce) : Managed cluster platform for big data processing using Hadoop, Spark, and other frameworks.</li>
+                <li><strong>Glue</strong> : Serverless data integration service for ETL, cataloging, and preparing data for analytics.</li>
+            </ul>
+            <p>It is advised to enable the encryption at rest option if the service is used in order to reduce data that could be accessed by an attacker.</p>
+            <p>On the other hand, resources that can enable <strong>encryption in transit</strong> are as follows:</p>
+            <ul>
+                <li><strong>RDS</strong>.</li>
+                <li><strong>S3 buckets</strong>.</li>
+                <li><strong>ELBv2</strong> (Elastic Load Balancing v2: ALB/NLB) : Distributes incoming traffic across multiple targets to improve availability and fault tolerance.</li>
+                <li><strong>CloudFront</strong> : Content Delivery Network (CDN) that delivers web content globally with low latency and high transfer speeds.</li>
+                <li><strong>API gateway</strong> : Fully managed service for creating, deploying, and securing APIs at any scale.</li>
+            </ul>
+            <p>Strong TLS encryption suites should be used. It is recommended to enable this option when possible.</p>
+            <p>As previously explained, S3 buckets implement data protection capabilities such as Integrity checks, Versioning, encryption at rest and in transit, S3 locks. Nonetheless, another data protection option can be implemented on S3 which are <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/batch-ops-legal-hold.html" target="_blank">Legal Holds</a> which permit to <strong>set a hold on an object version inside the bucket</strong> in order to <strong>retain</strong> it for a certain period and to prevent its deletion or replacement.</p>
+            <p>When speaking of resilience, the main mechanism used on AWS is <a href="https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html" target="_blank">AWS Backups</a>. Backup is a fully managed service meaning that AWS is taking care of the storage and underlying infrastructure of backups. Backups <strong>centralizes and automates the backup of data across AWS services.</strong> With AWS Backup, it is possible to <strong>create backup plans</strong>, schedule backups, and apply retention policies for resources such as EBS volumes, RDS databases, DynamoDB tables, EFS file systems, etc. It also enables <strong>cross-region and cross-account</strong> backups, which allows to <strong>restore resources quickly in case of disaster recovery</strong> scenarios. It should be noted that the <strong>management of Backup must be delegated to another AWS account whose sole task is to administrate the backup service</strong>.</p>
+            <p>Moreover, RDS databases implement an <a href="https://docs.aws.amazon.com/config/latest/developerguide/rds-instance-deletion-protection-enabled.html" target="_blank">option</a> to prevent the deletion of the RDS instance. If RDS is used, it is advised to enable this option.</p>
+            <p>An interesting reference to ensure that a Landing Zone is resilient to disaster recovery is: <a href="https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html" target="_blank">Disaster recovery options in the cloud - Disaster Recovery of Workloads on AWS: Recovery in the Cloud</a>. On the other hand, <strong>IaC ensures that most of the infrastructure can be redeployed</strong>, however it does not assure data availability as an interruption will take time to restore the infrastructure.</p>
+            <p>To finish, critical elements of the Landing Zone should be <strong>replicated in multiple availability zones</strong> in order to increase the resilience of the whole infrastructure.</p>
+        </section>
+
+        <!-- Data Science -->
+        <section id="datascience">
+            <h2>VII. AWS for data science</h2>
+            <p>AWS integrates <strong>data science capabilities</strong> based on new technologies emerging such as machine learning and deep learning.</p>
+            <p>The first step of data science is storing datasets needed to perform analytics. AWS offers multiple types of storage. A <strong>data warehouse</strong> storage which needs structured data such as <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html" target="_blank">Redshift</a>. It is a columnar database used for fast analytical queries on large datasets. On the other hand, AWS integrates <strong>data lake capabilities</strong> with <a href="https://docs.aws.amazon.com/lake-formation/latest/dg/how-it-works.html" target="_blank">Lake Formation</a> that enables a secure data catalog management in which the actual data is stored in S3 buckets acting as data lakes.</p>
+            <p>The second step is to <strong>prepare data</strong> which is mainly done by two services on AWS: <a href="https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html" target="_blank">Glue</a> and <a href="https://docs.aws.amazon.com/athena/latest/ug/what-is.html" target="_blank">Athena</a>. AWS Glue is a serverless data integration service used to extract, transform, and load (ETL) data and manage a data catalog. Amazon Athena is a serverless query service that allows you to run SQL queries directly on data stored in S3. Once the data are prepared they are ready to be consumed by the conceived model.</p>
+            <p>Then, data can be consumed by a <strong>machine learning model</strong> using <a href="https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html" target="_blank">SageMaker</a> which integrates a large number of known ML models.</p>
+            <p>Or, a <strong>deep learning model</strong>, as it is now unavoidable to speak about <strong>Large Language Models</strong> (LLM) and <strong>Retrieval Augmented Reality</strong> that combine an LLM with an external source of information, which is entirely supported by AWS using the <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" target="_blank">Bedrock</a> service. On the contrary, <strong>Model Context Protocol</strong> (MCP) which enables the use of agents that are autonomous and can carry on actions by themselves such as calling APIs, accessing tools and more, are also supported by Bedrock, however, giving access to such a system raises security concerns. Therefore, <strong>it is not recommended to deploy agentic AI in cloud environments</strong>. On top of that, GuardRails, which are restriction rules for AI, can still be bypassed.</p>
+            <p>For <strong>data visualization</strong>, the business intelligence platform <a href="https://docs.aws.amazon.com/quick/latest/userguide/quick-sight-getting-started.html" target="_blank">QuickSight</a> could be enhanced with an ML pipeline to do financial OPS for example. It should be noted that Quicksight is mostly used for business analytics.</p>
+            <p>To finish, AWS implements <strong>Big Data capabilities</strong> with data streaming systems, fully proprietary with <a href="https://docs.aws.amazon.com/streams/latest/dev/introduction.html" target="_blank">Kinesis</a> or using Apache Kafka with <a href="https://docs.aws.amazon.com/msk/latest/developerguide/what-is-msk.html" target="_blank">MSK</a>. In the same aim, AWS provides Map and Reduce capabilities with <a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-what-is-emr.html" target="_blank">EMR</a>. This pipeline could be using Apache Flink to sort the output data.</p>
+            <div class="note"><strong>Remark:</strong> Map and Reduce is used for processing large datasets using frameworks like Hadoop and Spark. Kafka is an event streaming platform where producers send messages to topics, brokers store them in partitions, and consumers read the messages in order, enabling scalable, real-time data pipelines. Apache Flink is a stream and batch processing framework that ingests data from sources like Kafka, processes it in real-time or batch, and outputs results to storage or dashboards. Its main goal is to classify data, aggregate them and transform them in order to organize unorganized data and labelize them. All those frameworks use distributed computing as their paradigm. However, those technologies get out of the scope of AWS.</div>
+        </section>
+
+        <!-- IoT -->
+        <section id="iot">
+            <h2>VIII. IoT</h2>
+            <p>A blind spot that is usually overlooked is <strong>AWS IoT capabilities</strong> which mostly centers on the <a href="https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html" target="_blank">IoT Core</a> and <a href="https://docs.aws.amazon.com/greengrass/v2/developerguide/what-is-iot-greengrass.html" target="_blank">Greengrass</a> service which is basically a <strong>Message Queuing Telemetry Transport</strong> (MQTT) broker. MQTT is a popular protocol used in OT environments, others such as ZigBee or LoRaWAN are commonly encountered too. GreenGrass can be used to centralize edge devices data through gateways in order to apply edge computing and later fog computing by redirecting traffic to supervision solutions like IoT Analytics. Moreover, AWS allows to efficiently manage fleets of devices with <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-thing-management.html" target="_blank">IoT Device Management</a> integrating security for each device with <a href="https://docs.aws.amazon.com/iot-device-defender/latest/devguide/what-is-device-defender.html" target="_blank">Device Defender</a>. In conclusion, if AWS is used in OT environments it should be considered an important security concern as it can confer an initial access since OT systems tend to be less secure by design.</p>
+        </section>
+
+        <!-- Annexes -->
+        <section id="annexes">
+            <h2>IX. Annexes</h2>
+            <p>This tables resumes all security concerns to have for each part: Tableau avec tous les checks de sécu par partie</p>
+            <div class="note"><strong>Note:</strong> The original document ends with this reference to a security checks table. For a detailed list of checks, refer to the original document or build your own based on the sections above.</div>
+        </section>
+        </div>
+    </div>
+
+    <div class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+    <script>
+        window.addEventListener('scroll', () => {
+            const btn = document.querySelector('.scroll-top');
+            if (window.scrollY > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        });
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar nav a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) current = section.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+            });
+        });
+
+         const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const body = document.body;
+
+    function toggleSidebar() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.toggle('mobile-open');
+            if (!sidebar.classList.contains('mobile-open')) {
+                body.classList.remove('sidebar-collapsed');
+            } else {
+                body.classList.add('sidebar-collapsed');
+            }
+        } else {
+            sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                body.classList.add('sidebar-collapsed');
+            } else {
+                body.classList.remove('sidebar-collapsed');
+            }
+        }
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+
+    // Al redimensionar, resetear estados
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove('mobile-open');
+            if (!sidebar.classList.contains('collapsed')) {
+                body.classList.remove('sidebar-collapsed');
+            }
+        } else {
+            sidebar.classList.remove('collapsed');
+            body.classList.remove('sidebar-collapsed');
+        }
+    });
+
+    
+    </script>
+</body>
+</html>
