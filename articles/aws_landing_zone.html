@@ -17,7 +17,7 @@
             line-height: 1.6;
         }
 
-        img {
+        .estilo-imagen {
             max-width: 100%;
       height: auto;
       display: block;
@@ -575,9 +575,9 @@ arn:partition:service:region:account-id:resource-type:resource-id</code></pre>
                     <li>Tier 2: <strong>Workstations</strong>.</li>
                 </ul>
                 <p>This model can be adapted to AWS keeping in mind that the control plane should be separated from the workload and data plane.</p>
-                <div class="diagram-placeholder"><img src="aws_landing_zone/5.png" alt="Separation of data plane and control plane"></div>
+                <div class="diagram-placeholder"><img src="aws_landing_zone/5.png" alt="Separation of data plane and control plane" class="estilo-imagen"></div>
                 <p>Once this separation is done, the tiering model can be implemented which would result in the following in this case:</p>
-                <div class="diagram-placeholder"><img src="aws_landing_zone/6.png" alt="AWS Organization Security Tier (CONTROL PLANE) → Tier 0, etc."></div>
+                <div class="diagram-placeholder"><img src="aws_landing_zone/6.png" alt="AWS Organization Security Tier (CONTROL PLANE) → Tier 0, etc." class="estilo-imagen"></div>
                 <p>The three tiers are organized as follows:</p>
                 <ul>
                     <li><strong>Tier 0</strong>: Control plane that is vital for the infrastructure which means identity and security.</li>
