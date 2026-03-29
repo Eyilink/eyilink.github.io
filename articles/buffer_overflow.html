@@ -357,11 +357,75 @@
       background: #333;
       border-color: #333;
     }
+
+     /* Añadir al final del bloque <style> */
+.sidebar-toggle {
+    position: fixed;
+    left: 20px;
+    top: 10px;
+    background: #000;
+    color: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1100;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s ease, background 0.2s;
+}
+.sidebar-toggle:hover {
+    background: #333;
+}
+
+
+/* Modificar la regla .sidebar existente para añadir transición */
+.sidebar {
+    /* mantener tus estilos actuales */
+    transition: transform 0.3s ease;
+}
+
+/* Nueva clase para colapsar */
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+/* Modificar la regla .content para que tenga transición */
+.content {
+    /* mantener tus estilos actuales */
+    transition: margin-left 0.3s ease;
+}
+
+/* Cuando la sidebar está colapsada, el contenido ocupa todo el ancho */
+body.sidebar-collapsed .content {
+    margin-left: 0;
+}
+
+/* Ajuste responsive para móvil (opcional, mejora experiencia) */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .content {
+        margin-left: 0;
+    }
+    body.sidebar-collapsed .content {
+        margin-left: 0;
+    }
+}
   </style>
 </head>
-<body>
-  <!-- Sidebar Navigation -->
-  <aside class="sidebar">
+<body class="sidebar-collapsed">
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+    <span id="toggleIcon">☰</span>
+</button>
+    <aside class="sidebar collapsed">
     <h3>Table of Contents</h3>
     <nav>
       <ul>
@@ -975,6 +1039,43 @@ ret               ; Return to caller</code></pre>
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
+    });
+
+    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const body = document.body;
+
+    function toggleSidebar() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.toggle('mobile-open');
+            if (!sidebar.classList.contains('mobile-open')) {
+                body.classList.remove('sidebar-collapsed');
+            } else {
+                body.classList.add('sidebar-collapsed');
+            }
+        } else {
+            sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                body.classList.add('sidebar-collapsed');
+            } else {
+                body.classList.remove('sidebar-collapsed');
+            }
+        }
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+
+    // Al redimensionar, resetear estados
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove('mobile-open');
+            if (!sidebar.classList.contains('collapsed')) {
+                body.classList.remove('sidebar-collapsed');
+            }
+        } else {
+            sidebar.classList.remove('collapsed');
+            body.classList.remove('sidebar-collapsed');
+        }
     });
   </script>
 </body>
