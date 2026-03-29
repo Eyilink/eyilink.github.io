@@ -66,6 +66,37 @@
     color: #555;
     margin-left: 8px;
   }
+
+  .article-card {
+  background: #fff;
+  padding: 25px;
+  margin: 20px 0;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  transition: all 0.25s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.article-title {
+  font-size: 1.2em;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.article-desc {
+  font-size: 0.95em;
+  color: #666;
+}
+
+.article-meta {
+  margin-top: 10px;
+  font-size: 0.8em;
+  color: #888;
+}
 </style>
 </head>
 <body>
@@ -75,10 +106,18 @@
 
   <h2>Articles</h2>
   <ul>
-    <li>
-      <a href="articles/aws_landing_zone.html">AWS: A well architected Landing Zone<span class="language-tag">EN</span></a>
-      <span class="article-date">March 29, 2026</span>
-    </li>
+    <li class="article-card">
+  <a href="articles/aws_landing_zone.html" class="article-title">
+    AWS: A well architected Landing Zone
+    <span class="language-tag">EN</span>
+  </a>
+
+  <p class="article-desc">
+    Complete guide on AWS multi-account environments, governance and security architecture.
+  </p>
+
+  <span class="article-meta">March 29, 2026</span>
+</li>
      <li>
       <a href="articles/snafflerust_es.html">SnaffleRust: herramienta de enumeración SMB<span class="language-tag">ES</span></a>
       <span class="article-date">16 de Febrero, 2026</span>
