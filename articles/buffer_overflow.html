@@ -102,11 +102,15 @@
 
     /* Main Content */
     .content {
-      margin-left: 280px;
-      padding: 40px 60px;
-      max-width: 1200px;
-    }
-
+            margin-left: 280px;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+        }
     /* Article Header */
     .article-header {
       background: #fff;
@@ -386,6 +390,7 @@
 
   <!-- Main Content -->
   <div class="content">
+    <div class="content-wrapper">
     <!-- Article Header -->
     <div class="article-header">
       <h1>Introduction to Stack-Based Buffer Overflow on x86 Architecture</h1>
@@ -918,7 +923,7 @@ ret               ; Return to caller</code></pre>
       <p>Understanding these low-level concepts is crucial for cybersecurity professionals, as it helps in both identifying vulnerabilities and developing secure code. In modern systems, various protections like ASLR, DEP, and stack canaries are implemented to mitigate these types of attacks, but the fundamental principles remain important for security research and analysis.</p>
     </section>
   </div>
-
+  </div>
   <!-- Scroll to top button -->
   <a href="#" class="scroll-top" id="scrollTop">↑</a>
 
