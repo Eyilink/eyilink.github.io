@@ -102,11 +102,15 @@
 
     /* Main Content */
     .content {
-      margin-left: 280px;
-      padding: 40px 60px;
-      max-width: 1200px;
-      justify-content: center;
-    }
+            margin-left: 280px;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+        }
 
     /* Article Header */
     .article-header {
@@ -403,6 +407,7 @@
 
   <!-- Main Content -->
   <div class="content">
+    <div class="content-wrapper">
     <!-- Article Header -->
     <div class="article-header">
       <h1>DNS Extraction Debugging with Dig</h1>
@@ -767,7 +772,7 @@ cd dns_tunneling && cargo run</code></pre>
       <p>DNS tunneling remains an important technique in cybersecurity, both for understanding potential attack vectors and for legitimate use cases such as data exfiltration testing in controlled environments. The stealthy nature of DNS traffic makes it a valuable tool for security professionals to understand and monitor.</p>
     </section>
   </div>
-
+  </div>
   <!-- Scroll to top button -->
   <a href="#" class="scroll-top" id="scrollTop">↑</a>
 
