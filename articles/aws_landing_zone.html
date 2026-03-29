@@ -425,7 +425,7 @@ body.sidebar-collapsed .content {
                     <li>Zero or more <strong>policies</strong>.</li>
                 </ul>
                 <p>AWS accounts are stored in containers called Organizational Units (OUs). Policies can be applied on OUs.</p>
-                <div class="diagram-placeholder">[Diagram: Organizational structure with root, OUs, and accounts]</div>
+                <div class="diagram-placeholder"><img src="aws_landing_zone/2.png" alt="Organizational structure with root, OUs, and accounts"></div>
                 <p>Each organization contains an <strong>administrative root</strong> in the <strong>Management</strong> account and is the <strong>starting point</strong> of the organization. The root is the top-most container in your organization's hierarchy. Under this root, you can create organizational units (OUs) to logically group your accounts and organize these OUs into a hierarchy.</p>
                 <p>If you apply a <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#management-policies" target="_blank">management policy</a> to the root, it applies to <strong>all organizational units</strong> (OUs) and accounts, including the <strong>management</strong> account for the organization.</p>
                 <p>If you apply an authorization policy such as an <strong>SCP</strong>, to the <strong>root</strong>, it <strong>applies to all organizational units</strong> and <strong>member accounts</strong> in the organization. It does <strong>not apply to the management account</strong> in the organization.</p>
@@ -569,9 +569,9 @@ arn:partition:service:region:account-id:resource-type:resource-id</code></pre>
                     <li>Tier 2: <strong>Workstations</strong>.</li>
                 </ul>
                 <p>This model can be adapted to AWS keeping in mind that the control plane should be separated from the workload and data plane.</p>
-                <div class="diagram-placeholder">[Diagram: Separation of data plane and control plane]</div>
+                <div class="diagram-placeholder"><img src="aws_landing_zone/5.png" alt="Separation of data plane and control plane"></div>
                 <p>Once this separation is done, the tiering model can be implemented which would result in the following in this case:</p>
-                <div class="diagram-placeholder">[Diagram: AWS Organization Security Tier (CONTROL PLANE) → Tier 0, etc.]</div>
+                <div class="diagram-placeholder"><img src="aws_landing_zone/6.png" alt="AWS Organization Security Tier (CONTROL PLANE) → Tier 0, etc."></div>
                 <p>The three tiers are organized as follows:</p>
                 <ul>
                     <li><strong>Tier 0</strong>: Control plane that is vital for the infrastructure which means identity and security.</li>
@@ -812,7 +812,7 @@ uv run python myscript.py</code></pre>
             <p>With this in mind, it is easier to understand an existing infrastructure.</p>
             <p>A base network infrastructure can be conceived in an AWS account in which the network configuration can be <strong>shared</strong> via AWS <a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html" target="_blank">Resource Access Manager</a> to have the <strong>same base</strong> in every account <strong>ensuring that this configuration is hardened</strong>.</p>
             <p>The possibility to share a network configuration in your Landing Zone simplifies the development of the Hub and Spoke model: <a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_planning_network_topology_prefer_hub_and_spoke.html" target="_blank">REL02-BP04 Prefer hub-and-spoke topologies over many-to-many mesh - Reliability Pillar</a></p>
-            <div class="diagram-placeholder">[Diagram: Hub-and-spoke topology with shared network resources]</div>
+            <div class="diagram-placeholder"><img src="aws_landing_zone/7.png" alt="Hub-and-spoke topology with shared network resources"></div>
             <p><strong>RAM</strong> can be used to share the <strong>transit gateway</strong> information, the <strong>CIDR ranges</strong> via <strong>prefix lists</strong>, the <strong>subnets</strong> and <strong>routing tables</strong> of the Hub account and all the spoke accounts.</p>
             <p>The <strong>security is focused in the Hub</strong> in this model as all the traffic passes by this element, thus, the Hub should implement <strong>Network Firewalls</strong>, <strong>NAT Gateways</strong>, <strong>IDS</strong>/<strong>IPS</strong> <strong>systems</strong>, a <strong>network probe</strong> (Vectra) and <strong>systematic logging</strong> of the traffic.</p>
             <p>On the other hand the <strong>spokes</strong> should implement <strong>security groups</strong>, <strong>NACL</strong> and <strong>resource hardening</strong>. This is where you should have a tightened perimeter security to ensure network <strong>partitioning</strong> and to respect the initially conceived <strong>segmentation</strong>.</p>
