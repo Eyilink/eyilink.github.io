@@ -102,11 +102,15 @@
 
     /* Main Content */
     .content {
-      margin-left: 280px;
-      padding: 40px 60px;
-      max-width: 1200px;
-      justify-content: center;
-    }
+            margin-left: 280px;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+        }
 
     /* Article Header */
     .article-header {
@@ -389,6 +393,7 @@
 
   <!-- Main Content -->
   <div class="content">
+    <div class="content-wrapper">
     <!-- Article Header -->
     <div class="article-header">
       <h1>SnaffleRust: Herramienta de Enumeración SMB</h1>
@@ -646,7 +651,7 @@
       <img src="images_snafflerust/demo.png" alt="Demostración de SnaffleRust">
     </section>
   </div>
-
+  </div>
   <!-- Scroll to top button -->
   <a href="#" class="scroll-top" id="scrollTop">↑</a>
 
