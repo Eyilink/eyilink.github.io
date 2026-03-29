@@ -924,7 +924,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
             <p>Once an abundant number of logs sources are poured into the log sink which is commonly an S3 bucket, it is important to <strong>protect existing logs</strong> to ensure the <strong>integrity</strong> and <strong>traceability</strong> of them.</p>
             <p>Aiming this, the <strong>organization trail</strong> in the CloudTrail service should support <strong>encryption at rest</strong> and implement a <strong>long retention period</strong> such as below:</p>
             <table>
-                <thead>汽<th>Name</th><th>Encryption</th><th>Integrity</th><th>Retention period</th> </thead>
+                <thead><th>Name</th><th>Encryption</th><th>Integrity</th><th>Retention period</th> </thead>
                 <tbody><tr><td>Organization-trail</td><td>SSM-KMS</td><td>Enabled</td><td>2 years</td> </tr>
                 </tbody>
             </table>
@@ -932,7 +932,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
             <p><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html" target="_blank">SSE-KMS</a> is the use of the <a href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html" target="_blank">KMS</a> service typically used for <strong>asymmetric encryption</strong> on AWS and SSE stands for Server Side Encryption. This combination allows a <strong>robust encryption</strong> of log archives at rest.</p>
             <p>As previously mentioned, logs are poured into an S3 bucket which hosts log archives of all sources. Hence, this bucket should be strongly protected. First, attributes of rights of the bucket can be configured:</p>
             <table>
-                <thead>汽<th>Name</th><th>Object ownership</th><th>Bucket policy</th> </thead>
+                <thead><th>Name</th><th>Object ownership</th><th>Bucket policy</th> </thead>
                 <tbody><tr><td>logs_bucket</td><td>Bucket owner preferred</td><td>logs_bucket_policy.json</td> </tr>
                 </tbody>
             </table>
