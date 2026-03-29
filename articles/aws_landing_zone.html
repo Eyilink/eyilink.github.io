@@ -435,7 +435,7 @@ body.sidebar-collapsed .content {
                     <li><strong>AWS IAM Identity Center</strong>: This service allows to federate an external users directory such as Microsoft EntraID. It will be explained in detail in the Identity and Access section.</li>
                 </ul>
                 <p>However, the use of Control Tower is completely <strong>optional</strong>, a custom Landing Zone can be created from the start following the mentioned guidelines.</p>
-                <div class="diagram-placeholder"><img src="aws_landing_zone/1.png" alt="High-level schema for Control Tower – Management account, Log Archive, Audit accounts" class="full-width"></div>
+                <div class="diagram-placeholder"><img src="aws_landing_zone/1.png" alt="High-level schema for Control Tower – Management account, Log Archive, Audit accounts" class="estilo-imagen"></div>
                 <p>As seen above, the concept of <strong>Management</strong> account, <strong>Log Archive</strong> and <strong>Audit</strong> accounts appeared. A focus needs to be done on AWS Organizations in order to understand finely the core of the Landing Zone.</p>
 
                 <h3 id="organizations">AWS Organizations</h3>
@@ -835,7 +835,7 @@ uv run python myscript.py</code></pre>
             <p>With this in mind, it is easier to understand an existing infrastructure.</p>
             <p>A base network infrastructure can be conceived in an AWS account in which the network configuration can be <strong>shared</strong> via AWS <a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html" target="_blank">Resource Access Manager</a> to have the <strong>same base</strong> in every account <strong>ensuring that this configuration is hardened</strong>.</p>
             <p>The possibility to share a network configuration in your Landing Zone simplifies the development of the Hub and Spoke model: <a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_planning_network_topology_prefer_hub_and_spoke.html" target="_blank">REL02-BP04 Prefer hub-and-spoke topologies over many-to-many mesh - Reliability Pillar</a></p>
-            <div class="diagram-placeholder"><img src="aws_landing_zone/7.png" alt="Hub-and-spoke topology with shared network resources" class="full-width"></div>
+            <div class="diagram-placeholder"><img src="aws_landing_zone/7.png" alt="Hub-and-spoke topology with shared network resources" class="estilo-imagen"></div>
             <p><strong>RAM</strong> can be used to share the <strong>transit gateway</strong> information, the <strong>CIDR ranges</strong> via <strong>prefix lists</strong>, the <strong>subnets</strong> and <strong>routing tables</strong> of the Hub account and all the spoke accounts.</p>
             <p>The <strong>security is focused in the Hub</strong> in this model as all the traffic passes by this element, thus, the Hub should implement <strong>Network Firewalls</strong>, <strong>NAT Gateways</strong>, <strong>IDS</strong>/<strong>IPS</strong> <strong>systems</strong>, a <strong>network probe</strong> (Vectra) and <strong>systematic logging</strong> of the traffic.</p>
             <p>On the other hand the <strong>spokes</strong> should implement <strong>security groups</strong>, <strong>NACL</strong> and <strong>resource hardening</strong>. This is where you should have a tightened perimeter security to ensure network <strong>partitioning</strong> and to respect the initially conceived <strong>segmentation</strong>.</p>
