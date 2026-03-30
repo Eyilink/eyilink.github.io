@@ -1036,7 +1036,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
                 <td><strong>Governance</strong></td>
                 <td>
                     <ul>
-                        <li>Verify that your multi account environment has a proper OU structure and hierarchy that respect functional needs</li>
+                        <li>Verify that your multi-account environment has a proper OU structure and hierarchy that respect functional needs</li>
                         <li>Apply SCPs to restrict dangerous actions</li>
                         <li>Enforce standardized tagging for cost allocation, automation and policy enforcement</li>
                         <li>Use delegated administrators to delegate administration of services to member accounts</li>
@@ -1053,11 +1053,11 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
                         <li>Ensure that the main source of users is a federated directory</li>
                         <li>Decommission local IAM users</li>
                         <li>Require MFA for all privileged roles and break-glass access</li>
-                        <li>Audit policies regularly and apply the principle of least privilege with a focus on trust policies, special operators and special actions.</li>
-                        <li>Favor IAM roles that benefit from temporary credential over static access keys</li>
+                        <li>Audit policies regularly and apply the principle of least privilege with a focus on trust policies, special operators and special actions</li>
+                        <li>Favor IAM roles that benefit from temporary credentials over static access keys</li>
                         <li>Use Private Link for AD connectivity</li>
                         <li>Test emergency roles</li>
-                        <li>Use SSM for privileges access instead of a bastion if possible</li>
+                        <li>Use SSM for privileged access instead of a bastion if possible</li>
                     </ul>
                 </td>
             </tr>
@@ -1084,7 +1084,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
                         <li>Implement granular workload isolation with microsegmentation</li>
                         <li>Harden resources by carrying on regular audits</li>
                         <li>Do not forget containerized environments</li>
-                        <li>Use a powerful artefact registry</li>
+                        <li>Use a powerful artifact registry</li>
                     </ul>
                 </td>
             </tr>
@@ -1095,7 +1095,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
                         <li>Ensure that logs are sent to the SIEM without being modified (log integrity)</li>
                         <li>Ensure that logs are exhaustive and meaningful</li>
                         <li>Deploy a generic image containing an EDR by default</li>
-                        <li>Set up Guard Duty protection plans</li>
+                        <li>Set up GuardDuty protection plans</li>
                     </ul>
                 </td>
             </tr>
@@ -1107,7 +1107,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
                         <li>Encrypt data at rest and in transit</li>
                         <li>Perform regular backups and use IaC</li>
                         <li>Replicate your infrastructure in multiple availability zones</li>
-                        <li>Tests to restore the whole infrastructure and monitor performances</li>
+                        <li>Test the ability to restore the whole infrastructure and monitor performance</li>
                     </ul>
                 </td>
             </tr>
