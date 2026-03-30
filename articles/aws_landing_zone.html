@@ -1023,8 +1023,96 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
         <!-- Annexes -->
         <section id="annexes">
             <h2>IX. Annexes</h2>
-            <p>This tables resumes all security concerns to have for each part: Tableau avec tous les checks de sécu par partie</p>
-            <div class="note"><strong>Note:</strong> The original document ends with this reference to a security checks table. For a detailed list of checks, refer to the original document or build your own based on the sections above.</div>
+            <p>This tables resumes all security concerns to have for each part: </p>
+              <table>
+        <thead>
+            <tr>
+                <th>Part</th>
+                <th>Security checks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Governance</strong></td>
+                <td>
+                    <ul>
+                        <li>Verify that your multi account environment has a proper OU structure and hierarchy that respect functional needs</li>
+                        <li>Apply SCPs to restrict dangerous actions</li>
+                        <li>Enforce standardized tagging for cost allocation, automation and policy enforcement</li>
+                        <li>Use delegated administrators to delegate administration of services to member accounts</li>
+                        <li>Ensure root credentials are highly protected</li>
+                        <li>Deploy a CSPM for continuous posture monitoring</li>
+                        <li>Regularly audit resources across regions to detect potential misconfigurations or deployments</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Identity and access management</strong></td>
+                <td>
+                    <ul>
+                        <li>Ensure that the main source of users is a federated directory</li>
+                        <li>Decommission local IAM users</li>
+                        <li>Require MFA for all privileged roles and break-glass access</li>
+                        <li>Audit policies regularly and apply the principle of least privilege with a focus on trust policies, special operators and special actions.</li>
+                        <li>Favor IAM roles that benefit from temporary credential over static access keys</li>
+                        <li>Use Private Link for AD connectivity</li>
+                        <li>Test emergency roles</li>
+                        <li>Use SSM for privileges access instead of a bastion if possible</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Tools and IaC Security</strong></td>
+                <td>
+                    <ul>
+                        <li>Use SSO with the CLI in order to not store any keys</li>
+                        <li>Ensure Git repositories are private and do not contain hardcoded secrets</li>
+                        <li>Use a linting tool for IaC</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Infrastructure protection</strong></td>
+                <td>
+                    <ul>
+                        <li>Limit the exposure of the cloud console and block unauthorized regions with SCPs</li>
+                        <li>Use the Hub and Spoke topology and ensure effective segregation of tiers</li>
+                        <li>Use RAM to share hardened generic network configuration</li>
+                        <li>Use Private Link as much as possible</li>
+                        <li>Verify no resource is exposed publicly</li>
+                        <li>Monitor and isolate public facing zones</li>
+                        <li>Implement granular workload isolation with microsegmentation</li>
+                        <li>Harden resources by carrying on regular audits</li>
+                        <li>Do not forget containerized environments</li>
+                        <li>Use a powerful artefact registry</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Detection</strong></td>
+                <td>
+                    <ul>
+                        <li>Ensure that logs are sent to the SIEM without being modified (log integrity)</li>
+                        <li>Ensure that logs are exhaustive and meaningful</li>
+                        <li>Deploy a generic image containing an EDR by default</li>
+                        <li>Set up Guard Duty protection plans</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Data protection and resilience</strong></td>
+                <td>
+                    <ul>
+                        <li>Rotate secrets and encryption keys</li>
+                        <li>Encrypt data at rest and in transit</li>
+                        <li>Perform regular backups and use IaC</li>
+                        <li>Replicate your infrastructure in multiple availability zones</li>
+                        <li>Tests to restore the whole infrastructure and monitor performances</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
         </section>
         </div>
     </div>
