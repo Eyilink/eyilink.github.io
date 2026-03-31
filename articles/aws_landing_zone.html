@@ -315,6 +315,74 @@ body.sidebar-collapsed .content {
         margin-left: 0;
     }
 }
+
+        ul, ol {
+    margin: 20px 0;
+    padding-left: 28px;
+}
+
+ul {
+    list-style: disc;
+}
+
+ol {
+    list-style: decimal;
+}
+
+li {
+    margin: 10px 0;
+    color: #cfcfcf;
+}
+
+        a {
+    color: #a78bfa; /* morado elegante */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:visited {
+    color: #a78bfa; /* evita morado feo default */
+}
+
+a:hover {
+    color: #c4b5fd;
+    text-decoration: underline;
+}
+
+        table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    background-color: #16181d;
+    border: 1px solid #2a2d34;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table th {
+    background: #1e2127; /* antes era azul fuerte */
+    color: #e6e6e6;
+    font-weight: 600;
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #2a2d34;
+}
+
+table td {
+    padding: 14px;
+    border-bottom: 1px solid #2a2d34;
+    color: #cfcfcf;
+}
+
+/* Hover sutil */
+table tr:hover td {
+    background: #1a1d23;
+}
+
+        ::selection {
+    background: #a78bfa;
+    color: #0f1115;
+}
     </style>
 </head>
 <body class="sidebar-collapsed">
