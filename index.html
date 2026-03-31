@@ -108,6 +108,27 @@ a:hover {
   font-size: 0.8em;
   color: #777;
 }
+  .articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px; /* espacio entre las cards */
+  margin-top: 20px;
+  list-style: none; /* opcional si venía de ul */
+  padding: 0;
+}
+
+.article-card {
+  background: #16181d;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #2a2d34;
+  transition: all 0.25s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
 </style>
 </head>
 <body>
@@ -115,54 +136,52 @@ a:hover {
 
   <p>Hello! I'm <strong>Jeremy</strong>, a cybersecurity enthusiast passionate about exploring digital security, system design and data science. On this blog, I share articles on subject I want to explore in odrer to learn about it. You will see that articles can be written in English as well as in Spanish or French.</p>
 
-  <h2>Articles</h2>
-  <ul>
-    <li class="article-card">
-  <a href="articles/aws_landing_zone.html" class="article-title">
-    AWS: A well architected Landing Zone
-    <span class="language-tag">EN</span>
-  </a>
+<h2>Articles</h2>
+<div class="articles-grid">
+  <div class="article-card">
+    <a href="articles/aws_landing_zone.html" class="article-title">
+      AWS: A well architected Landing Zone
+      <span class="language-tag">EN</span>
+    </a>
+    <p class="article-desc">
+      Complete guide on AWS multi-account environments, governance and security architecture.
+    </p>
+    <span class="article-meta">March 29, 2026</span>
+  </div>
 
-  <p class="article-desc">
-    Complete guide on AWS multi-account environments, governance and security architecture.
-  </p>
+  <div class="article-card">
+    <a href="articles/snafflerust_es.html" class="article-title">
+      SnaffleRust: herramienta de enumeración SMB
+      <span class="language-tag">ES</span>
+    </a>
+    <p class="article-desc">
+      Análisis y uso de SnaffleRust para enumeración SMB en entornos ofensivos.
+    </p>
+    <span class="article-meta">16 de Febrero, 2026</span>
+  </div>
 
-  <span class="article-meta">March 29, 2026</span>
-</li>
-   <li class="article-card">
-  <a href="articles/snafflerust_es.html" class="article-title">
-    SnaffleRust: herramienta de enumeración SMB
-    <span class="language-tag">ES</span>
-  </a>
-  <p class="article-desc">
-    Análisis y uso de SnaffleRust para enumeración SMB en entornos ofensivos.
-  </p>
-  <span class="article-meta">16 de Febrero, 2026</span>
-</li>
+  <div class="article-card">
+    <a href="articles/dns_extraction_article.html" class="article-title">
+      DNS tunneling debugging with Dig
+      <span class="language-tag">EN</span>
+    </a>
+    <p class="article-desc">
+      DNS tunnels analysis and debugging using Dig.
+    </p>
+    <span class="article-meta">November 24, 2025</span>
+  </div>
 
-<li class="article-card">
-  <a href="articles/dns_extraction_article.html" class="article-title">
-    DNS tunneling debugging with Dig
-    <span class="language-tag">EN</span>
-  </a>
-  <p class="article-desc">
-    DNS tunnels analysis and debugging using Dig.
-  </p>
-  <span class="article-meta">November 24, 2025</span>
-</li>
-
-<li class="article-card">
-  <a href="articles/buffer_overflow.html" class="article-title">
-    Introduction to Stack-based buffer overflow on x86 architecture
-    <span class="language-tag">EN</span>
-  </a>
-  <p class="article-desc">
-    Practical introduction and basic exploitation of buffer overflows in x86 architectures.
-  </p>
-  <span class="article-meta">November 6, 2025</span>
-</li>
-    <!-- Add more articles here -->
-  </ul>
+  <div class="article-card">
+    <a href="articles/buffer_overflow.html" class="article-title">
+      Introduction to Stack-based buffer overflow on x86 architecture
+      <span class="language-tag">EN</span>
+    </a>
+    <p class="article-desc">
+      Practical introduction and basic exploitation of buffer overflows in x86 architectures.
+    </p>
+    <span class="article-meta">November 6, 2025</span>
+  </div>
+</div>
 </body>
 </html>
 
