@@ -891,7 +891,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
             <p>Other techniques involve compute and service level abuse. Malicious AWS <strong>Lambda layers</strong> can be injected into existing functions, allowing attackers to persist code execution within legitimate serverless workflows. In parallel, an attacker controlling an Amazon EC2 instance may establish a reverse SOCKS proxy, maintaining covert network access even in restricted environments. Additionally, while not strictly persistence, creating ELB <strong>snapshots</strong> of attached volumes can allow attackers to recover sensitive data including <strong>credentials potentially stored in memory</strong> such as cloud credentials on disk extending their access capabilities beyond the initial compromise.</p>
             <div class="note"><strong>Remark:</strong> Snapshots <strong>does not permit saving RAM memory</strong>, meaning credentials could not be retrieved using this mean such as domain credentials in LSASS. However, cloud credentials could be retrieved in the ~/.aws/credentials file if configured.</div>
             <p>From a detection evasion standpoint, attackers may also target logging and monitoring services such as <strong>CloudWatch</strong> and <strong>CloudTrail</strong> by <strong>disabling</strong>, altering, or restricting log collection. At a higher level, if an attacker is able <strong>to remove or detach a member account from an AWS Organizations organization</strong> or operate from an account they control outside the organization, they can <strong>effectively evade Service Control Policies</strong> (SCPs). In this scenario, the account is no longer bound by the organization's governance, allowing the attacker to perform actions that would normally be restricted.</p>
-            <p>All of those techniques are detailed in the following article: <a href="https://www.riskinsight-wavestone.com/2025/09/awsdoor-persistance-sur-aws/" target="_blank">Persistance sur AWS</a></p>
+            <p>All of those techniques are detailed in the following article: <a href="https://www.riskinsight-wavestone.com/2025/09/awsdoor-persistance-sur-aws/" target="_blank">Persistance in AWS</a></p>
 
             <h4 id="containers">D. Virtualized and containerized environments in the cloud</h4>
             <p>This part will only be brief as virtualized and containerized environments are a vast subject.</p>
@@ -925,7 +925,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
             <p>Aiming this, the <strong>organization trail</strong> in the CloudTrail service should support <strong>encryption at rest</strong> and implement a <strong>long retention period</strong> such as below:</p>
             <table>
                 <thead><th>Name</th><th>Encryption</th><th>Integrity</th><th>Retention period</th> </thead>
-                <tbody><tr><td>Organization-trail</td><td>SSM-KMS</td><td>Enabled</td><td>2 years</td> </tr>
+                <tbody><tr><td>Organization-trail</td><td>SSE-KMS</td><td>Enabled</td><td>2 years</td> </tr>
                 </tbody>
             </table>
             <p>The <strong>integrity check</strong> permits the integrity of archives poured into the S3 bucket.When enabled, <strong>AWS signs archives delivered to the S3 log sink</strong> with AWS <strong>private key</strong>. As a result, if log archives are modified, it enables to <strong>check that they have been modified</strong> as the signature does not match the initial one.</p>
@@ -946,7 +946,7 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
             <p>In a second place, <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/DataDurability.html" target="_blank">data protection attributes</a> of the S3 bucket can be configured:</p>
              <table>
                 <thead><tr><th>Name</th><th>Encryption</th><th>Versioning</th><th>MFA delete</th><th>S3 locks</th></tr></thead>
-                <tbody><tr><td>logs_bucket</td><td>SSM-KMS</td><td>Enabled</td><td>Enabled</td><td>Enabled : 2 years</td></tr></tbody>
+                <tbody><tr><td>logs_bucket</td><td>SSE-KMS</td><td>Enabled</td><td>Enabled</td><td>Enabled : 2 years</td></tr></tbody>
              </table>
             <p>As previously seen, the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html" target="_blank">SSE-KMS</a> encryption is used.</p>
             <p>The <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html" target="_blank">Versioning</a> attribute of the bucket is set to enabled meaning that <strong>each past version of objects will be stored.</strong></p>
