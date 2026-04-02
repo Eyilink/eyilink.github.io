@@ -139,38 +139,53 @@ a:hover { color: #a5bfff; text-decoration: underline; }
     vertical-align: middle;
 }
 
- .social-footer {
-    position: fixed;       /* Fija el footer al viewport */
-    bottom: 20px;          /* Separación desde el borde inferior */
-    left: 50%;             /* Lo centra horizontalmente */
+ #about-section p {
+    background: #16181d;
+    padding: 32px 36px;
+    border-radius: 16px;
+    border: 1px solid #2a2d34;
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 1.8;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+
+  /* Footer social (solo visible en About) */
+  .social-footer {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
     transform: translateX(-50%);
     display: flex;
     justify-content: center;
     gap: 20px;
-    z-index: 1000;         /* Para que esté por encima de otros elementos */
-}
-
-.social-footer a {
-    width: 45px;
-    height: 45px;
+    z-index: 1000;
+    background: rgba(15, 17, 21, 0.8);
+    backdrop-filter: blur(12px);
+    padding: 8px 20px;
+    border-radius: 60px;
+    border: 1px solid #2a2d34;
+  }
+  .social-footer a {
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: #1a1d23;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #aaa;
-    font-size: 18px;
+    font-size: 1.2rem;
     transition: all 0.25s ease;
     border: 1px solid #2a2d34;
-}
-
-/* Hover pro */
-.social-footer a:hover {
+  }
+  .social-footer a:hover {
     background: #7aa2ff;
     color: #0f1115;
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
+  }
 </style>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -278,6 +293,23 @@ if(!sections['articles-section'].classList.contains('hidden')){
         setTimeout(() => card.classList.add('visible'), i*100);
     });
 }
+
+  
+  const footer = document.getElementById('social-footer');
+
+  function setActiveSection(targetId) {
+    if (targetId === 'about-section') {
+      aboutSec.classList.remove('hidden');
+      articlesSec.classList.add('hidden');
+      footer.style.display = 'flex';
+    } else {
+      aboutSec.classList.add('hidden');
+      articlesSec.classList.remove('hidden');
+      footer.style.display = 'none';
+    }
+  }
+
+    setActiveSection('about-section');
 </script>
 </body>
 </html>
