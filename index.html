@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>OPSEC</title>
+<style>
+/* ==== Dark theme ==== */
+body {
+    max-width: 1400px;
+    margin: 60px auto;
+    padding: 0 20px;
+    font-family: Georgia, "Times New Roman", serif;
+    background-color: #0f1115;
+    color: #e6e6e6;
+    line-height: 1.7;
+    position: relative;
+}
+
+h1 {
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #f5f5f5;
+}
+
+a { text-decoration: none; color: #7aa2ff; transition: color 0.2s ease; }
+a:hover { color: #a5bfff; text-decoration: underline; }
+
+/* Toggle pill wrapper */
+.toggle-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.toggle-buttons {
+    display: flex;
+    border: 1px solid #2a2d34;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    width: 360px;
+}
+
+.toggle-buttons button {
+    padding: 12px 0;
+    flex: 1;
+    background: none;
+    border: none;
+    color: #e6e6e6;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: color 0.3s ease;
+}
+
+.toggle-buttons button.active {
+    color: #0f1115;
+}
+
+.toggle-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: #7aa2ff;
+    border-radius: 12px;
+    z-index: 0;
+    transition: left 0.3s cubic-bezier(.77,0,.175,1);
+}
+
+/* Sections */
+#about-section, #articles-section {
+    transition: opacity 0.4s ease, max-height 0.4s ease;
+}
+
+.hidden {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+}
+
+/* ----- COLLAPSIBLE SIDEBAR ----- */
+.sidebar-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+.sidebar-bar {
+    width: 40px;
+    height: 100%;
+    background: #16181d;
+    border-right: 1px solid #2a2d34;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.2s;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+}
+
+.sidebar-bar:hover {
+    background: #1e2229;
+}
+
+.sidebar-bar i {
+    color: #7aa2ff;
+    font-size: 1.5rem;
+    transform: rotate(0deg);
+    transition: transform 0.3s;
+}
+
+.sidebar-bar .expand-text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: #aaa;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    margin-top: 20px;
+    opacity: 0.7;
+}
+
+.sidebar-panel {
+    width: 0;
+    height: 100vh;
+    background: #16181d;
+    border-right: 1px solid #2a2d34;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+    pointer-events: auto;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+    scrollbar-width: thin;
+    scrollbar-color: #2a2d34 #0f1115;
+}
+
+.sidebar-panel::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-panel::-webkit-scrollbar-track {
+    background: #0f1115;
+}
+.sidebar-panel::-webkit-scrollbar-thumb {
+    background: #2a2d34;
+    border-radius: 6px;
+}
+
+.sidebar-container.expanded .sidebar-panel {
+    width: 280px;
+}
+
+.sidebar-container.expanded .sidebar-bar i {
+    transform: rotate(180deg);
+}
+
+/* Contenido del panel */
+.panel-content {
+    padding: 24px 18px;
+    opacity: 0;
+    transition: opacity 0.2s ease 0.1s;
+    white-space: nowrap;
+}
+
+.sidebar-container.expanded .panel-content {
+    opacity: 1;
+}
+
+.panel-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #f1f1f1;
+    border-bottom: 1px solid #2a2d34;
+    padding-bottom: 10px;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wiki-category {
+    margin-bottom: 24px;
+}
+
+.wiki-category h4 {
+    margin: 0 0 12px 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wiki-category h4 i {
+    color: #7aa2ff;
+    width: 18px;
+    font-size: 0.9rem;
+}
+
+.wiki-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wiki-links li {
+    margin-bottom: 8px;
+}
+
+.wiki-links a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px;
+    border-radius: 8px;
+    color: #c0c0c0;
+    font-size: 0.9rem;
+    background: transparent;
+    transition: background 0.2s, color 0.2s;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.wiki-links a i {
+    font-size: 0.75rem;
+    color: #7aa2ff;
+    opacity: 0.7;
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.wiki-links a:hover {
+    background: #1e2229;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.wiki-links a:hover i {
+    opacity: 1;
+}
+
+/* About content */
+.about-content {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 60px;
+    transition: padding-left 0.3s;
+}
+
+/* Cuando panel expandido en desktop/tablet, empuja el contenido */
+@media (min-width: 769px) {
+    .sidebar-container.expanded ~ .about-wrapper .about-content {
+        padding-left: 320px;    /* 280px panel + 40px barra */
+    }
+}
+
+.about-wrapper {
+    width: 100%;
+}
+
+.about-content p {
+    background: #16181d;
+    padding: 28px 40px;
+    border-radius: 16px;
+    border: 1px solid #2a2d34;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: justify;
+    margin: 0;
+}
+
+/* Articles section */
+.article-card {
+    background: #16181d;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #2a2d34;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.article-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.article-title { font-size: 1.2em; color: #f1f1f1; margin-bottom: 8px; }
+.article-desc { font-size: 0.95em; color: #aaa; flex-grow: 1; }
+.article-meta { margin-top: 10px; font-size: 0.8em; color: #777; }
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.language-tag {
+    display: inline-block;
+    font-size: 0.7em;
+    margin-left: 8px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #1e2127;
+    color: #a78bfa;
+    border: 1px solid #2a2d34;
+    vertical-align: middle;
+}
+
+/* Footer social */
+.social-footer {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    z-index: 999;
+    background: rgba(15, 17, 21, 0.8);
+    backdrop-filter: blur(12px);
+    padding: 8px 20px;
+    border-radius: 60px;
+    border: 1px solid #2a2d34;
+}
+
+.social-footer a {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #1a1d23;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 1.2rem;
+    transition: all 0.25s ease;
+    border: 1px solid #2a2d34;
+}
+
+.social-footer a:hover {
+    background: #7aa2ff;
+    color: #0f1115;
+    transform: translateY(-3px);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1200px) {
+    .about-content {
+        max-width: 900px;
+    }
+}
+
+@media (max-width: 900px) {
+    .about-content {
+        padding-left: 50px;
+    }
+    .sidebar-container.expanded .sidebar-panel {
+        width: 260px;
+    }
+    /* En tablet el empuje sigue activo */
+    .sidebar-container.expanded ~ .about-wrapper .about-content {
+        padding-left: 310px;
+    }
+}
+
+/* MÓVIL: panel en modo overlay (no empuja el contenido) */
+@media (max-width: 768px) {
+    body {
+        padding: 0 12px;
+        margin-top: 40px;
+    }
+    
+    .articles-grid { 
+        grid-template-columns: 1fr; 
+    }
+    .toggle-buttons { 
+        width: 100%; 
+        max-width: 300px; 
+    }
+    
+    /* Barra lateral más compacta */
+    .sidebar-bar {
+        width: 36px;
+    }
+    .sidebar-bar i {
+        font-size: 1.3rem;
+    }
+    .sidebar-bar .expand-text {
+        font-size: 0.65rem;
+        margin-top: 12px;
+    }
+    
+    /* Panel expandido: overlay, no empuja */
+    .sidebar-container.expanded .sidebar-panel {
+        width: 250px;
+        box-shadow: 8px 0 25px rgba(0,0,0,0.5);
+    }
+    
+    /* Quitar el padding-left que empuja el contenido */
+    .sidebar-container.expanded ~ .about-wrapper .about-content {
+        padding-left: 46px;      /* solo el espacio de la barra colapsada */
+    }
+    
+    .about-content {
+        padding-left: 46px;
+        max-width: 100%;
+    }
+    
+    .about-content p {
+        padding: 20px 20px;
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+    
+    .panel-content {
+        padding: 20px 14px;
+    }
+    
+    /* Ajustes para footer */
+    .social-footer {
+        gap: 12px;
+        padding: 6px 16px;
+        bottom: 15px;
+    }
+    .social-footer a {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+    .sidebar-bar {
+        width: 32px;
+    }
+    .sidebar-bar i {
+        font-size: 1.2rem;
+    }
+    .sidebar-container.expanded .sidebar-panel {
+        width: 220px;
+    }
+    .about-content {
+        padding-left: 42px;
+    }
+    .sidebar-container.expanded ~ .about-wrapper .about-content {
+        padding-left: 42px;
+    }
+    .about-content p {
+        padding: 16px 16px;
+        font-size: 0.95rem;
+    }
+    .toggle-wrapper {
+        margin-bottom: 25px;
+    }
+    .toggle-buttons {
+        max-width: 260px;
+    }
+    .toggle-buttons button {
+        padding: 10px 0;
+        font-size: 0.9rem;
+    }
+    .social-footer {
+        padding: 5px 12px;
+        bottom: 12px;
+    }
+    .social-footer a {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+}
+
+/* Mejora táctil */
+@media (pointer: coarse) {
+    .wiki-links a {
+        padding: 10px 8px;
+    }
+    .sidebar-bar {
+        min-width: 44px;
+    }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    .sidebar-bar {
+        width: 40px;
+    }
+    .panel-content {
+        padding: 12px 14px;
+    }
+    .wiki-category {
+        margin-bottom: 12px;
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- COLLAPSIBLE SIDEBAR -->
+<div class="sidebar-container" id="wikiSidebar">
+    <div class="sidebar-bar" id="sidebarBar">
+        <i class="fas fa-chevron-right"></i>
+        <span class="expand-text">Useful Links</span>
+    </div>
+    <div class="sidebar-panel">
+        <div class="panel-content">
+            
+            <div class="wiki-category">
+                <h4><i class="fas fa-globe"></i> General</h4>
+                <ul class="wiki-links">
+                    <li><a href="https://hacktricks.wiki/en/index.html" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i>HackTricks Wiki</a></li>
+                </ul>
+            </div>
+
+            <div class="wiki-category">
+                <h4><i class="fas fa-sitemap"></i> Active Directory</h4>
+                <ul class="wiki-links">
+                    <li><a href="https://zer1t0.gitlab.io/posts/attacking_ad/" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i>Attacking AD (zer1t0)</a></li>
+                    <li><a href="https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet?tab=readme-ov-file#using-ad-module" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i>AD Exploitation Cheat Sheet</a></li>
+                    <li><a href="https://beta.hackndo.com/constrained-unconstrained-delegation/" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i>Constrained/Unconstrained Delegation</a></li>
+                    <li><a href="https://www.thehacker.recipes/" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i>The Hacker Recipes</a></li>
+                </ul>
+            </div>
+
+            <div class="wiki-category">
+                <h4><i class="fas fa-code"></i> Web</h4>
+                <ul class="wiki-links">
+                    <li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i>PayloadsAllTheThings</a></li>
+                    <li><a href="https://github.com/danielmiessler/SecLists" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i>SecLists</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toggle pill -->
+<div class="toggle-wrapper">
+    <div class="toggle-buttons">
+        <div class="toggle-bg"></div>
+        <button class="active" data-target="about-section">About</button>
+        <button data-target="articles-section">Articles</button>
+    </div>
+</div>
+
+<!-- About section wrapper -->
+<div class="about-wrapper">
+    <div id="about-section">
+        <div class="about-content">
+            <p>Hi ! In this blog, I will explore computer science in depth from a <strong>security perspective</strong> as it allows to cover an important number of subjects from hardware hacking to machine learning and data processing. This blog aims at detailing tools of a pentester and show that pentesting is more about having expertise on numerous subjects than resolving online challenges (CTFs) which deviate from real-life assessments.<br><br>
+
+As a result you will <strong>not only see cybersecurity subjects</strong> but also data science topics, and not only technical cybersecurity topics but also <strong>organizational or architectural topics</strong> encountered in real engagements. I will mainly provide <strong>methods and tools</strong> to be able to handle any engagement where you do not know the topic beforehand, since it is a common use case in real pentesting where you can assess the security posture of extravagant systems.<br><br>
+
+Articles will be written in English as well as in Spanish or French sometimes. You can find below my social media profiles, I am open to discussing subjects if you want to share a thought.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Articles section -->
+<div id="articles-section" class="hidden">
+    <div class="articles-grid">
+        <div class="article-card">
+            <a href="articles/aws_landing_zone.html" class="article-title">
+              AWS: A well architected Landing Zone <span class="language-tag">EN</span>
+            </a>
+            <p class="article-desc">Complete guide on AWS multi-account environments, governance and security architecture.</p>
+            <span class="article-meta">March 29, 2026</span>
+        </div>
+        <div class="article-card">
+            <a href="articles/snafflerust_es.html" class="article-title">
+              SnaffleRust: herramienta de enumeración SMB <span class="language-tag">ES</span>
+            </a>
+            <p class="article-desc">Análisis y uso de SnaffleRust para enumeración SMB en entornos ofensivos.</p>
+            <span class="article-meta">16 de Febrero, 2026</span>
+        </div>
+        <div class="article-card">
+            <a href="articles/dns_extraction_article.html" class="article-title">
+              DNS tunneling debugging with Dig <span class="language-tag">EN</span>
+            </a>
+            <p class="article-desc">DNS tunnels analysis and debugging using Dig.</p>
+            <span class="article-meta">November 24, 2025</span>
+        </div>
+        <div class="article-card">
+            <a href="articles/buffer_overflow.html" class="article-title">
+              Introduction to Stack-based buffer overflow on x86 architecture <span class="language-tag">EN</span>
+            </a>
+            <p class="article-desc">Practical introduction and basic exploitation of buffer overflows in x86 architectures.</p>
+            <span class="article-meta">November 6, 2025</span>
+        </div>
+    </div>
+</div>
+
+<!-- Footer social -->
+<div class="social-footer" id="social-footer">
+  <a href="https://github.com/Eyilink" target="_blank" aria-label="GitHub">
+    <i class="fab fa-github"></i>
+  </a>
+  <a href="https://x.com/eyilink_" target="_blank" aria-label="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+  <a href="https://www.linkedin.com/in/jeremie-schemith/" target="_blank" aria-label="LinkedIn">
+    <i class="fab fa-linkedin-in"></i>
+  </a>
+</div>
+
+<script>
+// Toggle About / Articles
+const toggleBg = document.querySelector('.toggle-bg');
+const buttons = document.querySelectorAll('.toggle-buttons button');
+const sections = {
+    'about-section': document.getElementById('about-section'),
+    'articles-section': document.getElementById('articles-section')
+};
+const cards = document.querySelectorAll('.article-card');
+const footer = document.getElementById('social-footer');
+const wikiSidebar = document.getElementById('wikiSidebar');
+
+function setActiveSection(targetId) {
+    if (targetId === 'about-section') {
+        sections['about-section'].classList.remove('hidden');
+        sections['articles-section'].classList.add('hidden');
+        footer.style.display = 'flex';
+        wikiSidebar.style.display = 'flex';
+    } else {
+        sections['about-section'].classList.add('hidden');
+        sections['articles-section'].classList.remove('hidden');
+        footer.style.display = 'none';
+        wikiSidebar.style.display = 'none';
+    }
+}
+
+buttons.forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        toggleBg.style.left = index === 0 ? '0%' : '50%';
+
+        const target = btn.dataset.target;
+        setActiveSection(target);
+
+        if (target === 'articles-section') {
+            cards.forEach((card, i) => {
+                card.classList.remove('visible');
+                setTimeout(() => card.classList.add('visible'), i * 100);
+            });
+        }
+    });
+});
+
+if (!sections['articles-section'].classList.contains('hidden')) {
+    cards.forEach((card, i) => {
+        setTimeout(() => card.classList.add('visible'), i * 100);
+    });
+}
+
+setActiveSection('about-section');
+
+// --- COLLAPSIBLE SIDEBAR LOGIC ---
+const sidebarContainer = document.getElementById('wikiSidebar');
+const sidebarBar = document.getElementById('sidebarBar');
+
+sidebarBar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sidebarContainer.classList.toggle('expanded');
+});
+
+// Cerrar panel al hacer clic fuera
+document.addEventListener('click', (e) => {
+    if (sidebarContainer.classList.contains('expanded')) {
+        if (!sidebarContainer.contains(e.target)) {
+            sidebarContainer.classList.remove('expanded');
+        }
+    }
+});
+
+sidebarContainer.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+// Prevenir cierre al hacer scroll táctil
+const panel = sidebarContainer.querySelector('.sidebar-panel');
+panel.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+});
+</script>
+</body>
+</html>
