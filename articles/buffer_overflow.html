@@ -1045,25 +1045,56 @@ ret               ; Return to caller</code></pre>
         }
     });
 
-    document.querySelectorAll('pre').forEach(pre => {
-  const button = document.createElement('button');
-  button.innerText = 'Copiar';
-  button.style.position = 'absolute';
-  button.style.top = '8px';
-  button.style.right = '8px';
-  button.style.fontSize = '12px';
-  button.style.cursor = 'pointer';
-
+  document.querySelectorAll('pre').forEach(pre => {
+  // asegurar posicionamiento
   pre.style.position = 'relative';
-  pre.appendChild(button);
 
-  button.addEventListener('click', () => {
-    const code = pre.innerText;
+  // crear botón
+  const btn = document.createElement('button');
+  btn.textContent = 'Copy';
+
+  // estilos inline (adaptados a tu tema)
+  Object.assign(btn.style, {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    background: '#1e2127',
+    color: '#aaa',
+    border: '1px solid #2a2d34',
+    borderRadius: '4px',
+    padding: '4px 8px',
+    fontSize: '0.75em',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    opacity: '0'
+  });
+
+  // hover (aparece solo al pasar el mouse)
+  pre.addEventListener('mouseenter', () => {
+    btn.style.opacity = '1';
+  });
+
+  pre.addEventListener('mouseleave', () => {
+    btn.style.opacity = '0';
+  });
+
+  // acción copiar
+  btn.addEventListener('click', () => {
+    const code = pre.querySelector('code')?.innerText || pre.innerText;
     navigator.clipboard.writeText(code);
 
-    button.innerText = '✔';
-    setTimeout(() => button.innerText = 'Copiar', 1500);
+    btn.textContent = 'Copied';
+    btn.style.color = '#7aa2ff';
+    btn.style.borderColor = '#7aa2ff';
+
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.color = '#aaa';
+      btn.style.borderColor = '#2a2d34';
+    }, 1500);
   });
+
+  pre.appendChild(btn);
 });
   </script>
 </body>
