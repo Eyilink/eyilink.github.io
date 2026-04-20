@@ -1233,7 +1233,57 @@ aws lambda get-policy --function-name &lt;function_name&gt;</code></pre>
         }
     });
 
-    
+    document.querySelectorAll('pre').forEach(pre => {
+  // asegurar posicionamiento
+  pre.style.position = 'relative';
+
+  // crear botón
+  const btn = document.createElement('button');
+  btn.textContent = 'Copy';
+
+  // estilos inline (adaptados a tu tema)
+  Object.assign(btn.style, {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    background: '#1e2127',
+    color: '#aaa',
+    border: '1px solid #2a2d34',
+    borderRadius: '4px',
+    padding: '4px 8px',
+    fontSize: '0.75em',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    opacity: '0'
+  });
+
+  // hover (aparece solo al pasar el mouse)
+  pre.addEventListener('mouseenter', () => {
+    btn.style.opacity = '1';
+  });
+
+  pre.addEventListener('mouseleave', () => {
+    btn.style.opacity = '0';
+  });
+
+  // acción copiar
+  btn.addEventListener('click', () => {
+    const code = pre.querySelector('code')?.innerText || pre.innerText;
+    navigator.clipboard.writeText(code);
+
+    btn.textContent = 'Copied';
+    btn.style.color = '#7aa2ff';
+    btn.style.borderColor = '#7aa2ff';
+
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.color = '#aaa';
+      btn.style.borderColor = '#2a2d34';
+    }, 1500);
+  });
+
+  pre.appendChild(btn);
+});
     </script>
 </body>
 </html>
