@@ -304,8 +304,9 @@
         <h3 id="s1a">A. Inside a Windows API Call: Mechanisms and Execution Flow</h3>
         <p>Windows provides an <a href="https://learn.microsoft.com/en-us/windows/win32/api/" target="_blank">API</a> that implements <strong>all the functions that can be used in a Windows operating system</strong>. This API is implemented in <strong>user land</strong> meaning that the <strong>operating system is in charge of making low-level operations</strong> which are done in the <strong>kernel</strong>. Since the mid-2000s Windows does not allow sensitive modification in the kernel (PatchGuard feature) such as patching functions which could be used for EDR evasion. However, it is still possible to write <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk" target="_blank">drivers</a> that execute in <strong>kernel mode</strong>, nonetheless they are <strong>restricted</strong>. The article will focus on <strong>developing a user land solution</strong>. Therefore, no operation on drivers will be implemented.</p>
         <p>To illustrate the execution flow of a Windows API call, we will take the <strong>Notepad binary creating a new file on the file system</strong>. For this, Notepad will call the <strong>CreateFileA</strong> function of the <strong>Kernel32 DLL</strong> which will call the <strong>NtCreateFile</strong> function of the <strong>NT DLL</strong>, which hosts <strong>NT functions that are used to translate calls into kernel mode</strong>. The NTDLL is executed in <strong>user mode</strong> (or user land). <strong>Each NT function is linked to an operation in kernel mode using a System Service Number (SSN)</strong> which is the <strong>identifier of the wanted kernel operation</strong>.</p>
-        <p>To transfer the SSN, a function needs to <strong>push the value of the SSN in the EAX register</strong> and then <strong>call the syscall instruction</strong>. Once those instructions are called, the <strong>KiSystemService</strong> which is executed in kernel mode receives those parameters and <strong>resolves the corresponding kernel mode function using the System Service Descriptor Table</strong> (SSDT), which makes correspondences between SSNs and kernel functions. Once the function is resolved, it is called in the <strong>NT OS KRNL</strong> library.</p>
         <img src="edr_article_images/image17.png" alt="Windows API call execution flow diagram" class="article-img">
+        <p>To transfer the SSN, a function needs to <strong>push the value of the SSN in the EAX register</strong> and then <strong>call the syscall instruction</strong>. Once those instructions are called, the <strong>KiSystemService</strong> which is executed in kernel mode receives those parameters and <strong>resolves the corresponding kernel mode function using the System Service Descriptor Table</strong> (SSDT), which makes correspondences between SSNs and kernel functions. Once the function is resolved, it is called in the <strong>NT OS KRNL</strong> library.</p>
+        
 
         <h3 id="s1b">B. Inner Workings of an EDR</h3>
         <p>Modern EDRs raise alerts based on a <strong>correlation of events</strong> by performing a <strong>dynamic and static analysis</strong>. Usually, a suspicious kill chain is needed for an EDR to trigger an alert.</p>
@@ -385,8 +386,9 @@
           <p>When the term <strong>image</strong> is employed, it is in the <strong>context of compiling</strong>. Indeed, when <strong>code is compiled</strong>, it first gets compiled by a compiler which produces <strong>a file that translates the code into Assembly language</strong>, then it gets <strong>assembled using the Assembler which produces a file in machine code called an object file and is usually in COFF</strong> (Common Object File Format). Last, the object file needs to go through the <strong>linker</strong> in order to <strong>resolve dependencies</strong>, <strong>this will produce an image file</strong>.</p>
         </div>
         <p>The section headers part is an array of multiple elements of <code>IMAGE_SECTION_HEADER</code>. There are <strong>as many elements as sections present in the file</strong>. Each structure contains <strong>essential information for a section to be loaded in memory</strong>, such as the VirtualAddress which is the RVA of the first byte of the loaded section in memory, the VirtualSize which is the size of the section, Characteristics which allows to specify flags (read-only section, etc.), the Name which indicates the section's name.</p>
-        <p>All that information is <strong>used in order to instantiate a new process</strong> loading the wanted image. First, the PE file <strong>triggers a new process creation</strong> which makes the kernel create the EPROCESS structure in <strong>kernel mode</strong>. As a second step, the operating system reserves the <strong>needed virtual memory for the process</strong> which is the <strong>Virtual Address Space</strong> (VAS) in which the <strong>Process Environment Block</strong> (PEB) and <strong>Thread Environment Block</strong> (TEB) live. Third, sections of the PE file <strong>need to be mapped in memory as the PE file is not plainly copied into memory</strong>. Fourth, the <strong>operating system resolves the Import Address Table</strong> (IAT). Fifth, <strong>resolved DLLs need to be loaded into the process's memory using Windows default loader</strong> which is <strong>LdrpLoadDLL</strong>. Finally, <strong>a thread is created to execute the process's tasks</strong> and placed at the <strong>Original Entry Point</strong> (OEP) in order to <strong>start the program's execution</strong>.</p>
         <img src="edr_article_images/image28.png" alt="Section headers array structure" class="article-img">
+        <p>All that information is <strong>used in order to instantiate a new process</strong> loading the wanted image. First, the PE file <strong>triggers a new process creation</strong> which makes the kernel create the EPROCESS structure in <strong>kernel mode</strong>. As a second step, the operating system reserves the <strong>needed virtual memory for the process</strong> which is the <strong>Virtual Address Space</strong> (VAS) in which the <strong>Process Environment Block</strong> (PEB) and <strong>Thread Environment Block</strong> (TEB) live. Third, sections of the PE file <strong>need to be mapped in memory as the PE file is not plainly copied into memory</strong>. Fourth, the <strong>operating system resolves the Import Address Table</strong> (IAT). Fifth, <strong>resolved DLLs need to be loaded into the process's memory using Windows default loader</strong> which is <strong>LdrpLoadDLL</strong>. Finally, <strong>a thread is created to execute the process's tasks</strong> and placed at the <strong>Original Entry Point</strong> (OEP) in order to <strong>start the program's execution</strong>.</p>
+        
         <img src="edr_article_images/image29.png" alt="Process loading steps overview" class="article-img">
       </section>
 
@@ -451,7 +453,10 @@ pub fn get_ntdll_base(dll_name_to_search: String) -> *mut core::ffi::c_void {
 
         <p>The <strong>PEB</strong> is resolved using the <strong>GS register on 64 bits architectures</strong> and the FS register on 32 bits architectures. The GS and FS registers <strong>respectively point to the TEB</strong> which <strong>contains a pointer to the PEB, at the 0x60 offset for x86_64</strong> and the 0x30 offset for x86.</p>
         <p>Once the NTDLL's address is resolved, addresses of NT functions can be resolved using the <code>IMAGE_DIRECTORY_ENTRY_EXPORT</code> of the Data Directory. This is possible because a copy of the ntdll.dll file is loaded into memory <strong>which keeps the PE structure</strong>, <strong>therefore the EAT can be browsed and parsed in order to know the target Nt function's address</strong>.</p>
-
+        <div class="note">
+          <strong>Remark:</strong>
+          <p>On the other hand, the GetProcAddress function of the Windows API could be used to resolve Nt functions’ addresses, however <strong>the EDR might have hooked this function</strong>.</p>
+        </div>
         <div class="code-block">
           <button class="code-toggle" onclick="toggleCode(this)">
             <span>get_function_address() — Rust</span>
@@ -626,7 +631,8 @@ Total_size % 16 === 0</code></pre>
         </div>
 
         <p>Making direct syscalls allows to evade user land detections from a function of the Windows API that could be hooked by EDRs. However, some EDRs still hook syscalls by changing the <strong>NTDLL's code and inserting a JMP instruction jumping to the EDR's code in order to analyze each syscall</strong>. Microsoft Defender for Endpoint (MDE) was used for testing and it <strong>does not hook syscalls</strong>, therefore the <strong>SSN could be retrieved</strong>.</p>
-        <p>Moreover, implementing only direct syscalls <strong>raises an issue</strong> during static analysis. If you <strong>decompile the binary and search for the syscall string</strong>, it will <strong>show the syscall instruction hardcoded</strong>, which is very <strong>suspicious</strong> from a blue team standpoint as legitimate programs should only use the high-level Windows API which is made for developer experience:</p>
+         <img src="edr_article_images/image19.png" alt="Syscall instructionsss" class="article-img">
+          <p>Moreover, implementing only direct syscalls <strong>raises an issue</strong> during static analysis. If you <strong>decompile the binary and search for the syscall string</strong>, it will <strong>show the syscall instruction hardcoded</strong>, which is very <strong>suspicious</strong> from a blue team standpoint as legitimate programs should only use the high-level Windows API which is made for developer experience:</p>
         <img src="edr_article_images/image31.png" alt="Syscall instruction visible in static analysis/decompiled binary" class="article-img">
 
         <h3 id="s4c">C. Indirect Syscalls</h3>
@@ -909,7 +915,31 @@ ntdll.RtlUserThreadStart</code></pre>
 
         <p>To create a fake call stack, it is needed to create <strong>fake stack frames</strong>. To create fake stack frames, the <strong>size of each stack frame needs to be known</strong>. To do so, there is a mechanism called <strong>stack unwinding</strong> that <strong>occurs natively in Windows</strong>. To calculate the right size to unwind the stack, the OS looks at the <strong>.pdata section</strong> which contains an <strong>array of RUNTIME_FUNCTION</strong>, in which the <strong>UnwindData field is an offset to an UNWIND_INFO</strong> structure. The <strong>array of UnwindCodes permits to calculate a function's stack frame's size</strong>.</p>
 
+       
+
+                <img src="edr_article_images/image13.png" alt="RUNTIME_FUNCTION and UNWIND_INFO structure diagram" class="article-img">
+        <p>The UNWIND_INFO structure contains <strong>an array of UnwindCodes</strong> which <strong>represents instructions set in a function's</strong> prologue, which <strong>basically represents elements of the function's context needed in the stack frame</strong>. The <strong>array of UnwindCodes permits to calculate a function's stack frame's size</strong>. UnwindCode is an enum defined as follows:</p>
         <div class="code-block">
+          <button class="code-toggle" onclick="toggleCode(this)">
+            <span>UnwindCode enum — Rust</span>
+            <span class="lang-badge">Rust</span>
+            <span class="arrow">▶</span>
+          </button>
+          <div class="code-content">
+<pre><code class="language-rust">enum UnwindCode {
+    UWOP_PUSH_NONVOL = 0,
+    UWOP_ALLOC_LARGE = 1,
+    UWOP_ALLOC_SMALL = 2,
+    UWOP_SET_FPREG = 3,
+    UWOP_SAVE_NONVOL = 4,
+    UWOP_SAVE_NONVOL_FAR = 5,
+    UWOP_SAVE_XMM128 = 8,
+    UWOP_SAVE_XMM128_FAR = 9,
+    UWOP_PUSH_MACHFRAME = 10
+}</code></pre>
+          </div>
+        </div>
+         <div class="code-block">
           <button class="code-toggle" onclick="toggleCode(this)">
             <span>calculate_function_stack_size() — Rust</span>
             <span class="lang-badge">Rust</span>
@@ -957,29 +987,6 @@ ntdll.RtlUserThreadStart</code></pre>
         return total + calculate_function_stack_size(chained_rf, image_base);
     }
     total
-}</code></pre>
-          </div>
-        </div>
-
-                <img src="edr_article_images/image13.png" alt="RUNTIME_FUNCTION and UNWIND_INFO structure diagram" class="article-img">
-        <p>The UNWIND_INFO structure contains <strong>an array of UnwindCodes</strong> which <strong>represents instructions set in a function's</strong> prologue, which <strong>basically represents elements of the function's context needed in the stack frame</strong>. The <strong>array of UnwindCodes permits to calculate a function's stack frame's size</strong>. UnwindCode is an enum defined as follows:</p>
-        <div class="code-block">
-          <button class="code-toggle" onclick="toggleCode(this)">
-            <span>UnwindCode enum — Rust</span>
-            <span class="lang-badge">Rust</span>
-            <span class="arrow">▶</span>
-          </button>
-          <div class="code-content">
-<pre><code class="language-rust">enum UnwindCode {
-    UWOP_PUSH_NONVOL = 0,
-    UWOP_ALLOC_LARGE = 1,
-    UWOP_ALLOC_SMALL = 2,
-    UWOP_SET_FPREG = 3,
-    UWOP_SAVE_NONVOL = 4,
-    UWOP_SAVE_NONVOL_FAR = 5,
-    UWOP_SAVE_XMM128 = 8,
-    UWOP_SAVE_XMM128_FAR = 9,
-    UWOP_PUSH_MACHFRAME = 10
 }</code></pre>
           </div>
         </div>
