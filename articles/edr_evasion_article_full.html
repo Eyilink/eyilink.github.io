@@ -355,6 +355,7 @@
           <strong>Remark:</strong>
           <p>Windows also implements malware protection which is the <strong>AntiMalware Scan Interface</strong> (AMSI) which <strong>scans Powershell scripts, Windows Script Host like VBScript, Office macros and certain .Net runtimes</strong>. Therefore, other scripting languages such as <strong>Rust are not subject to the AMSI</strong>, which reinforces the conviction of choosing Rust to develop malware.</p>
         </div>
+        <p>The next two sections will explore how modern APT groups defeat EDR monitoring.</p>
 
         <h3 id="s1c">C. APT Operations: Active Manipulation</h3>
         <p>The first approach seen is called <strong>active manipulation</strong> and is <strong>centered around vulnerable drivers</strong>. This approach is considered <strong>aggressive</strong> and not stealthy. This approach aims at shutting down the <strong>EDR's agent by cutting the EDR's network</strong>, then finding a vulnerable driver <strong>to shut the EDR's process down completely by using kernel mode privileges</strong>. In some cases, API hooking was even performed by threat actors on functions such as NtOpenProcess <strong>in order to make the EDR unable to open the malware's process</strong>. Nonetheless, this <strong>approach makes a lot of noise which increases the likelihood of detection</strong>.</p>
