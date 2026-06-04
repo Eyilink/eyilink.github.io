@@ -1296,14 +1296,14 @@ Spoof:
         <h2>IX. State of the Art</h2>
         <p>In my opinion, state of the art loaders focus on <strong>exploiting mechanisms around DLL loading</strong> instead of attempting to exploit pure Windows internals. A proposed approach is to <strong>bypass the native Windows DLL loader</strong>, which is <strong>used to load DLL on Windows</strong>, by using <strong>Position Independent Code</strong> (PIC) that will <strong>work no matter where the code ends up in memory</strong>. One way to create PIC code is to use <a href="https://tradecraftgarden.org/docs.html" target="_blank">Crystal Palace</a>. However, <strong>Reflective DLL Injection</strong> (RDI), <strong>shellcode Reflective DLL Injection</strong> (sRDI) and <strong>User-defined Reflective Loader</strong> (UdRL) should be explained in order to understand historically what led to PIC code.</p>
         <p>The idea of RDI is elegant: instead of relying on the Windows loader to map the DLL into memory and handle all the setup steps, <strong>why not make the DLL do it itself</strong>. To make this possible the <strong>DLL exports a special function</strong>, conventionally named <strong>ReflectiveLoader</strong>, which is <strong>responsible for performing all the steps that the Windows loader would normally handle</strong>:</p>
-        <ul>
+        <ol>
           <li>Allocate enough memory to hold the DLL image</li>
           <li>Copy the DLL sections into that allocated memory</li>
           <li>Fix the base relocations</li>
           <li>Resolve the Import Address Table (IAT)</li>
           <li>Set the correct memory permissions for each section</li>
           <li>Call the DLL entry point</li>
-        </ul>
+        </ol>
         <p>However, it comes with a limitation, as to call the <strong>ReflectiveLoader</strong> function <strong>an external loader is needed</strong>, therefore <strong>it is not position independent code</strong>.</p>
         <p><strong>sRDI</strong> is the natural evolution of RDI. Two main types of loaders were created to trigger the ReflectiveLoader function directly in the DLL: the first one <strong>places a small shellcode stub inside the MS-DOS header responsible for finding the exported ReflectiveLoader function and calling it</strong>, the second one <strong>prepends a loader directly into the DLL</strong>.</p>
         <p>However, this approach has a default, when the loader allocates memory for the DLL, it allocates it from <strong>unbacked memory space</strong>, meaning that Windows doesn't have any record of this memory region, which is a clear IoC of injection detectable using <strong>call stack inspection</strong>.</p>
