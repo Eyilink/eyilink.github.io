@@ -523,7 +523,7 @@ pub fn get_ntdll_base(dll_name_to_search: String) -> *mut core::ffi::c_void {
         <h3 id="s4a">A. Parsing the SSN</h3>
         <p>The address of the wanted Nt function was obtained. The <strong>syscall number</strong> (SSN) needs to be <strong>parsed from a given Nt function</strong>, which is NtCreateRemoteThread in our case. An Nt function looks as follows in memory: </p>
         <img src="edr_article_images/image23.png" alt="Nt function memory layout showing SSN between MOV and SYSCALL instructions" class="article-img">
-<p>Remember the syscall number has to be <strong>pushed into the EAX register</strong>. Therefore, if we parse the hexadecimal that is in between <code>4C8BD1B8</code> (<strong>first MOV instruction and beginning of the second one</strong>) and <code>0FC5</code> (SYSCALL instruction), the <strong>SSN can be found</strong>:</p>
+<p>Remember the syscall number has to be <strong>pushed into the EAX register</strong>. Hence, it is <code>0C5</code> here, as the letter <code>h</code> is for hexadecimal. Therefore, if we parse the hexadecimal that is in between <code>4C8BD1B8</code> (<strong>first MOV instruction and beginning of the second one</strong>) and <code>0FC5</code> (SYSCALL instruction), the <strong>SSN can be found</strong>:</p>
 
         <div class="code-block">
           <button class="code-toggle" onclick="toggleCode(this)">
