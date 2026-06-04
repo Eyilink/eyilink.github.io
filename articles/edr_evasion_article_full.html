@@ -507,6 +507,7 @@ pub fn get_ntdll_base(dll_name_to_search: String) -> *mut core::ffi::c_void {
 }</code></pre>
           </div>
         </div>
+        <p>Once the address of the targeted Nt function is resolved, syscalls can be made.</p>
               <div class="note">
           <strong>Remark:</strong>
           <p>An in-depth explanation is done in this <a href="https://web.archive.org/web/20250624082010/https://alice.climent-pommeret.red/posts/direct-syscalls-hells-halos-syswhispers2/" target="_blank">article</a> where it explains relations in between the double-linked list and arrays indexing each other, in order to retrieve effectively the target Nt function's address.</p>
