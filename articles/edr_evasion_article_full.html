@@ -685,7 +685,7 @@ Total_size % 16 === 0</code></pre>
 }</code></pre>
           </div>
         </div>
-
+        <p>As a result, the indirect syscalls is still valid and during the static analysis the <strong>syscall string does not show anymore:</strong></p>
         <img src="edr_article_images/image34.png" alt="After indirect syscalls: syscall string no longer visible in static analysis" class="article-img">
         <p>Nonetheless, implementing <strong>only indirect syscalls was still detected by MDE as other mechanisms such as ETW or kernel telemetry exist</strong>.</p>
 
