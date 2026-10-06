@@ -240,34 +240,34 @@ html {
 <li>Construire un <strong>cahier des charges</strong> (requirements) et estimer le stockage et matériels (hardware) requis.</li>
 <li>Réaliser un schéma d'architecture <strong>haut niveau</strong> des API, schéma DB et workflow des différentes entités (utilisateurs, administrateurs, pipeline data, etc.).</li>
 <li>Revoir le système pour gérer plus de <strong>query par seconde</strong> (scaling).</li>
-<li>Gestion des pannes (failure handling): revoir le systèmme pour supporter une charge lourd (heavy load) et le restaurer (system recovery).</li>
+<li>Gestion des <strong>pannes</strong> (failure handling): revoir le systèmme pour supporter une charge lourd (heavy load) et le restaurer (system recovery).</li>
 </ol>
 <p><br/></p>
 <p>Le cahier des charges devraient être construit selon les étapes suivantes:</p>
 <ol>
 <li>Faire une liste de questions afin de clarifier des points flous du problème à résoudre.</li>
-<li>Concevoir les prérequis fonctionnels (c'est à dire les fonctions métier qui sont custom au problème à résoudre).</li>
-<li>Concevoir les prérequis non-fonctionnels (consistance, haute concurrence, faible latence, haute disponibilité, que ça soit scalable).</li>
+<li>Concevoir les prérequis <strong>fonctionnels</strong> (c'est à dire les fonctions métier qui sont custom au problème à résoudre).</li>
+<li>Concevoir les prérequis <strong>non-fonctionnels</strong> (consistance, haute concurrence, faible latence, haute disponibilité, que ça soit scalable).</li>
 </ol>
 <p><br/></p>
 <p>Le terme query par seconde a été précédemment mentionné. En effet, il est essentiel d'estimer la quantité de données traitées par la solution finale. Cette quantité est souvent représentée via des Query per Second (QPS) ou des Transactions per Second (TPS). Les données traitées devraient également être étudiées afin de concevoir un workflow du traitements des données utiles à la resolution du problème.</p>
 <p><br/></p>
-<p>L'architecture haut-niveau devrait adoptée ou combinée un des types de patrons d'architecture présentés ci-dessous:</p>
+<p>L'architecture haut-niveau devrait adoptée ou combinée un des types de <strong>patrons d'architecture</strong> présentés ci-dessous:</p>
 <ul>
 <li>Orienté service (REST, GraphQL, SOAP, microservice (gRPC), etc.)</li>
 <li>Basé sur les évènements (Event-Driven Architecture)</li>
 <li>Architecture serverless et Function as a Service (AWS Lambda, etc.)</li>
-<li>Conseption API-first où une API est le point central du système conçu.</li>
-<li>Architecture Cloud Native (K8S, Docker, AWS EKS, AWS ECS, un service mesh)</li>
+<li>Conception API-first où une API est le point central du système conçu.</li>
+<li>Architecture Cloud Native (K8S, Docker, AWS EKS, AWS ECS, un service mesh, avec développement d'un PaaS, etc.)</li>
 <li>Paradigmes basés sur des infrastructures distribuées tels que fog computing ou edge computing.</li>
 </ul>
 <p><br/></p>
 <p>Différentes entitées vont également interagir sur la solution finale:</p>
 <ul>
-<li>Des clients dans les architectures client-serveur (clients web, clients lourds, clients légers, clients mobile).</li>
-<li>Des stockages de données (data store) tels que <a href="https://www.youtube.com/watch?v=z_NbVtbgBJw">Redis</a> (caching), base de données SQL, bases de données No-SQL, base de données en colonnes, base de données vectorielles, etc.</li>
-<li>Des services (les fonctions métier).</li>
-<li>Le traitement des messages et notifications (messaging) via le traitement de données en continue (data stream tel que Apache Kafka), l'identification des données (datagramme tel que Apache Flink), la gestion des données séquentielles (data queue tel que RabbitMQ) et la recherche de ces données (Elastic Search pour une recherche rapide).</li>
+<li>Des <strong>clients</strong> dans les architectures client-serveur (clients web, clients lourds, clients légers, clients mobile).</li>
+<li>Des <strong>stockages de données</strong> (data store) tels que <a href="https://www.youtube.com/watch?v=z_NbVtbgBJw">Redis</a> (caching), base de données SQL, bases de données No-SQL, base de données en colonnes, base de données vectorielles, etc.</li>
+<li>Des <strong>services (les fonctions métier)</strong>.</li>
+<li>Le traitement des messages et <strong>notifications</strong> (messaging) via le traitement de données en continue (data stream tel que Apache <strong>Kafka</strong>), l'identification des données (datagramme tel que Apache <strong>Flink</strong>), la gestion des données séquentielles (data queue tel que <strong>RabbitMQ</strong>) et la recherche de ces données (<strong>Elastic Search</strong> pour une recherche rapide).</li>
 <li>Les entités réseaux telles que les CDN, les passerelles API, Load Balancer, Rate Limiting, Virtual IP, etc.</li>
 <li>La partie matérielle (hardware): choix d'une architecture monolythe, distribuée ou serverless.</li>
 </ul>
@@ -275,12 +275,12 @@ html {
 <p>Le choix d'une API devrait se porter sur 3 critères:</p>
 <ol>
 <li>Le type d'API envisagée.</li>
-<li>Le type du format des données (JSON, XML, protobuf, raw, etc.).</li>
-<li>Interaction de type transactionnelle (RESTful) ou stream (websocket).</li>
+<li>Le type du <strong>format des données</strong> (JSON, XML, protobuf, raw, etc.).</li>
+<li><strong>Interaction</strong> de type transactionnelle (RESTful) ou stream (websocket).</li>
 </ol>
 <p>Pour les bases de données, un diagramme UML (clé primaire, etc.) devrait être construit afin d'avoir une vision claire et de maintenir une architecture long terme.</p>
 <p><br/></p>
-<p>Au niveau logiciel, des patrons de conception facilitant l'intégration de futures fonctionnalités devraient être adoptées. Un diagramme de flux (réseau TCP/UDP) devrait être conçu afin de visualiser de façon claire les différentes communications entre les entités de la solution conçue, ce qui devrait être inclus dans un cahier des charges.</p>
+<p>Au niveau logiciel, des patrons de conception (singleton, Object-Relational Mapping, dependency injection, etc.) facilitant l'intégration de futures fonctionnalités devraient être adoptées. Un <strong>diagramme de flux</strong> (réseau TCP/UDP) devrait être conçu afin de visualiser de façon claire les différentes communications entre les entités de la solution conçue, ce qui devrait être inclus dans un cahier des charges.</p>
 <p><br/></p>
 <p>La gestion des pannes (failures handling) devrait passer par une forte réplication des charges de travail (workload) et des bases de données sur plusieurs zones de disponibilités (AZ) et avec plusieurs redondances. Les données et charges de travail devraient être sauvegardées régulièrement sur une solution externe (CommVault) afin de ne pas entraver les capacités de restauration.</p>
 <p><br/></p>
