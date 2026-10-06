@@ -130,7 +130,7 @@
 </div>
 <div class="nb-section">
 <h1 id="Data-mining">Data mining</h1>
-<p>Le <strong>data mining</strong> est la discipline qui vise à explorer des données afin d'en déduire des patrons pour prédire un comportement futur. Pour cela, le data mining utilise l'apprentissage automatique (machine learning), l'ETL (extraction, transformation et chargement des données), des pipelines (uniquement apppliquées aux données) et des workflows (orchestration plus haut niveau de l'entiereté de la chaine de data mining).</p>
+<p>Le <strong>data mining</strong> est la discipline qui vise à explorer un jeu de données afin d'en déduire des patrons pour prédire un comportement futur. Pour cela, le data mining utilise **l'apprentissage automatique** (machine learning), **l'ETL** (extraction, transformation et chargement des données), des **pipelines** (uniquement apppliquées aux données) et des **workflows** (orchestration plus haut niveau de l'entiereté de la chaine de data mining).</p>
 <p><br/></p>
 <p><u>Remarque</u>: Il est nécessaire d'éclaircir la différence entre IA, ML (machine learning) et DL (deep learning). Le ML et DL sont les outils de l'IA, néanmoins le ML et DL peuvent être utilisés dans d'autres disciplines qui ne sont pas de l'IA.</p>
 <p><br/></p>
@@ -141,21 +141,21 @@
 <li>Clustering</li>
 <li>Renforcement</li>
 <li>Réduction de dimensionalité</li>
-<li>Détection d'outliers</li>
+<li>Détection d'anomalies</li>
 </ul>
 <p><br/></p>
-<p>Cependant, il est nécessaire de clarifier les concepts de data lake, data warehouse et datalake house qui sont des éléments propres au stockage et recherche de données (en data mining):</p>
+<p>Il est également nécessaire de clarifier les concepts de data lake, data warehouse et datalake house qui sont des éléments propres au stockage et à la recherche de données (en data mining):</p>
 <ul>
-<li>Une data warehouse est un moteur de stockage de données qui supporte uniquement le stockage de données structurées via des transactions ACID (atomicité, cohérence, isolation et durabilité). ACID garantit qu'une transaction est effectuée de façon fiable.</li>
-<li>Un data lake est un moteur de stockage de données qui stocke des données non structurées, semi-structurées ou complétement brute. Un data lake permet de stocker un nombre conséquent de données.</li>
-<li>Dans certaines infrastructures, un data lake et une data warehouse sont présent assez régulièrement et communique afin de synchroniser les données entre eux. Une data lake house est donc un système qui permet de centraliser et synchroniser la gestion d'un data lake et d'une data warehouse qui existe dans le même écosystème.</li>
+<li>Une **data warehouse** est un moteur de stockage de données qui supporte uniquement le stockage de données **structurées** via des **transactions ACID** (atomicité, cohérence, isolation et durabilité). ACID garantit qu'une transaction est effectuée de façon fiable.</li>
+<li>Un **data lake** est un moteur de stockage de données qui stocke des données **non structurées**, semi-structurées ou complétement brute. Un data lake permet de stocker un nombre **conséquent** de données.</li>
+<li>Dans certaines infrastructures, un data lake et une data warehouse sont présent assez régulièrement et communique afin de synchroniser les données entre eux. Un **data lake house** est donc un système qui permet de **centraliser et synchroniser** la gestion d'un **data lake et d'une data warehouse** qui existe dans le même écosystème.</li>
 </ul>
-<p>Une data warehouse est généralement basée sur un outil de traitement analytique en ligne (OLAP) qui utilise des datas cubes afin de fournir le résultat d'une recherche de façon résumé et flexible. Les data cube permettent de représentés une donnée sous une forme multidimensionnelle et donc facilite et optimise les recherches.</p>
+<p>Une data warehouse est généralement basée sur un outil de traitement analytique en ligne (OLAP) qui utilise des datas cubes afin de fournir le résultat d'une recherche de façon résumé et flexible. Les data cubes permettent de représentés une donnée sous une forme multidimensionnelle et donc facilitent et optimisent les recherches.</p>
 <p>Par ailleurs, une discipline similaire appliquée aux transactions existent et s'appelle traitement des transactions en ligne (OLTP).</p>
 <p>Des pratiques d'analyse de cluster existe également, elles seront suscintement abordées lors de cette artcile.</p>
 <p><br/></p>
-<p>Revenons à l'apprentissage automatique. En apprentissage automatique, il existe plusieurs types d'apprentissages: supervisé, non supervisé et par renforcement.</p>
-<p>La différence entre supervisé et non supervisé:</p>
+<p>Revenons à l'apprentissage automatique. En apprentissage automatique, il existe plusieurs types d'apprentissages: **supervisé, non supervisé et par renforcement.**</p>
+<u>La différence entre supervisé et non supervisé:</u>
 <ul>
 <li>Supervisé: Les données sont étiquettées et les données d'entrainements contiennent la modelisation de la solution désirés, par conséquent le modèle est guidé.</li>
 <li>Non-supervisé: Les données ne sont pas étiquettées et le modèle n'est pas guidé il essaie de modeliser la solution désirée seul. Peut être catégorisé en 3 types : clustering, réduction de dimensionalité et détection d'anomalie.</li>
