@@ -117,16 +117,27 @@
 </li>
 <li><a href="#Les-bases-de-l'apprentissage-automatique-(machine-learning)">Les bases de l'apprentissage automatique (machine learning)</a>
 <ul>
-            <li><a href="#s1a">A. Algorithmes de prédiction</a></li>
-            <li><a href="#s1b">B. Algorithmes de classification</a></li>
-            <li><a href="#s1c">C. Ensemble learning</a></li>
-            <li><a href="#s1d">D. Algorithme de clustering</a></li>
-   <li><a href="#s1d">D. Algorithme de réduction de dimensionnalités</a></li>
-   <li><a href="#s1d">D. Algorithme de détection d'anomalies</a></li>
-   <li><a href="#s1d">D. Apprentissage par renforcement</a></li>
+            <li><a href="Algorithmes-de-pr%C3%A9diction-:">A. Algorithmes de prédiction</a></li>
+            <li><a href="Algorithme-de-classification-:">B. Algorithmes de classification</a></li>
+            <li><a href="Ensemble-Learning">C. Ensemble learning</a></li>
+            <li><a href="Algorithme-de-clustering-(non-supervis%C3%A9)-:">D. Algorithme de clustering</a></li>
+   <li><a href="Algorithme-de-r%C3%A9duction-de-dimensionalit%C3%A9:">E. Algorithme de réduction de dimensionnalités</a></li>
+   <li><a href="Algorithme-de-d%C3%A9tection-d'anomalies-ou-d%C3%A9tection-d'outliers:">F. Algorithme de détection d'anomalies</a></li>
+   <li><a href="Reinforcement-learning">G. Apprentissage par renforcement</a></li>
           </ul>
 </li>
-<li><a href="#Evaluer-la-pr%C3%A9cision-d'un-mod%C3%A8le">Evaluer la précision d'un modèle</a></li>
+<li><a href="#Evaluer-la-pr%C3%A9cision-d'un-mod%C3%A8le">Evaluer la précision d'un modèle</a>
+<ul>
+            <li><a href="Comment-%C3%A9valuer-que-votre-mod%C3%A8le-sur-ajuste-ou-sous-ajuste-les-donn%C3%A9es?">A. Comment évaluer que le modèle sur-ajuste ou sous-ajuste ?</a></li>
+            <li><a href="Comment-%C3%A9valuer-un-mod%C3%A8le-d'apprentissage-?">B. Comment évaluer un modèle d'apprentissage ?</a></li>
+            <li><a href="Pourquoi-%C3%A9chantilloner-les-donn%C3%A9es-?">C. Pourquoi échantilloner les données ?</a></li>
+            <li><a href="Pourquoi-m%C3%A9langer-les-donn%C3%A9es-(shuffle)-?">D. Pourquoi mélanger les données (shuffle) ?</a></li>
+   <li><a href="Comment-mesurer-la-performance-d'un-classeur-sur-un-%C3%A9chantillon-de-taille-faible?">E. Comment mesurer la performance d'un classeur sur un échantillon de taille faible ?</a></li>
+   <li><a href="Les-m%C3%A9triques-disponible-pour-mesurer-la-performance-d'un-classeur?">F. Les métriques disponibles afin de mesurer la performance d'un classeur</a></li>
+   <li><a href="Les-fonctions-de-co%C3%BBts/perte-afin-de-mod%C3%A9liser-l'erreur-d'une-distribution?">G. Les fonctions de coûts/perte permettant de modéliser l'erreur d'une distribution donnée</a></li>
+      <li><a href="R%C3%A9duire-le-sur-ajustement">H. Réduire le sur-ajustement</a></li>
+          </ul>
+</li>
 <li><a href="#L'apprentissage-profond-(deep-learning)">L'apprentissage profond (deep learning)</a></li>
 <li><a href="#CIRTD:-Pr%C3%A9parer-les-donn%C3%A9es-d'entrainement-d'un-mod%C3%A8le-(cleaning,-integration,-reduction,-transformation,-discretization)">CIRTD: Préparer les données d'entrainement d'un modèle (cleaning, integration, reduction, transformation, discretization)</a></li>
 <li><a href="#L'IA-g%C3%A9n%C3%A9rative-moderne">L'IA générative moderne</a></li>
@@ -198,12 +209,12 @@
 <div class="nb-section">
 <h1 id="Conception-des-syst%C3%A8mes-condens%C3%A9-(System-Design)">Conception des systèmes condensé (System Design)</h1><p>La conception des systèmes consiste à concevoir une solution finale qui sera résiliente, adaptée au problème initiale et sécurisée. Cette section vise à fournir un résumé condensé de la conception des systèmes qui est un concept important lorsqu'il est envisagé de répondre à un problème de la science des données. L'architecture de la solution ne doit pas être négligée.</p>
 <p><br/></p>
-<p>Une erreur classique est de traiter la résolution à un problème avec une API CRUD classique en ajoutant du caching et de la réplication pour la résilience et performance. Or, à cause de cette architecture souvent des problèmes de concurrence se posent notamment lorsque par exemple deux utilisateurs essayent de réserver une chambre en même temps sur une application de booking d'hôtels.</p>
+<p>En <strong>architecture</strong> des systèmes d'informations, une erreur classique est de traiter la résolution à un problème avec une <strong>API CRUD classique en ajoutant du caching et de la réplication</strong> pour la résilience et performance. Or, à cause de cette architecture souvent des problèmes de <strong>concurrence</strong> se posent notamment lorsque par exemple deux utilisateurs essayent de réserver une chambre en même temps sur une application de booking d'hôtels.</p>
 <p>Donc, il est nécessaire de respecter un processus permettant d'éviter ces entraves:</p>
 <ol>
-<li>Construire un cahier des charges (requirements) et estimer le stockage et matériels (hardware) requis.</li>
-<li>Réaliser un schéma d'architecture haut niveau des API, schéma DB et workflow des différentes entités (utilisateurs, administrateurs, pipeline data, etc.).</li>
-<li>Revoir le système pour gérer plus de query par seconde (scaling).</li>
+<li>Construire un <strong>cahier des charges</strong> (requirements) et estimer le stockage et matériels (hardware) requis.</li>
+<li>Réaliser un schéma d'architecture <strong>haut niveau</strong> des API, schéma DB et workflow des différentes entités (utilisateurs, administrateurs, pipeline data, etc.).</li>
+<li>Revoir le système pour gérer plus de <strong>query par seconde</strong> (scaling).</li>
 <li>Gestion des pannes (failure handling): revoir le systèmme pour supporter une charge lourd (heavy load) et le restaurer (system recovery).</li>
 </ol>
 <p><br/></p>
