@@ -86,6 +86,31 @@
     .scroll-top:hover { background: #a5bfff; color: #0f1115; }
     ::selection { background: #a78bfa; color: #0f1115; }
     @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.mobile-open { transform: translateX(0); } .content { margin-left: 0; } }
+
+   /* WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #16181d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2d34;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7aa2ff;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2d34 #16181d;
+}
+
   </style>
 <script>
     MathJax = {
