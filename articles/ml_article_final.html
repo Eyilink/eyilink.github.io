@@ -2434,6 +2434,7 @@ WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated req
 <p><br/></p>
 <h3 id="Agent-l%C3%A9ger-local">Agent léger local</h3><p>En général, les agents légers locaux (de type <code>qwen2.5:0.5b</code>, <code>qwen2.5:1.5b</code>, <code>qwen2.5:3b</code>, etc.) <strong>ne convergent pas vers une solution</strong> lors de problèmes complexes (par exemple: pipeline visant à créer le PoC associé à une CVE et à déployer un environnement de bacs à sable afin de le tester). Il convient de noter que les modèles légers <code>qwen2.5:*</code> sont parmi les meilleurs du marché. Il a également été remarqué que les modèles supérieurs à <code>qwen2.5:3b</code> sont en capacité de <strong>formater une demande au serveur MCP</strong> et donc d'appeler des tools.</p>
 <p>Cependant, le projet <a href="https://github.com/JustVugg/colibri">Colibri</a> vise à augmenter cette limite en <strong>unifiant la mémoire RAM et SSD</strong> afin d'offrir des accès mémoire plus rapide et donc d'accélerrer également la puissance de calculs, ce qui permet par exemple de lancer le modèle GLM-5.2 contenant <strong>744 milliards paramètres</strong> sur un ordinateur classique sous réserve de disposer de la mémoire SSD suffisante.</p>
+<h3 id="JEV">JEV</h3><p>Récemment, une technologie nommé <a href="https://www.youtube.com/watch?v=VE5dsWll06M">JEV</a> est devenu très populaire. Cette technologie permet de faire de la classification ultra-rapide ce permet de fluidifier certains processus dans les pipelines agentiques. Par exemple, sur un système de tikceting, l'urgence d'un ticket pourrait être classifier via un tel système.</p>
 </div>
 <div class="nb-section">
 <h1 id="World-models">World models</h1><p>Le problème que pose les modèles actuels est qu'ils <strong>ne comprennent pas authentiquement le monde réel</strong> car ils sont soient représentés sous la forme de <strong>distribution de probabilité</strong> ou du texte pour les LLMs. Donc, un modèle n'est pas en mesure de comprendre la réalité comme un être vivant qui est en mesure de le faire via ses cinq sens.</p>
@@ -2446,15 +2447,15 @@ WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated req
 <li>TPU vs GPU vs CPU: <a href="https://www.youtube.com/watch?v=MUWAbpg1xLo">https://www.youtube.com/watch?v=MUWAbpg1xLo</a></li>
 <li>Data lakehouse: <a href="https://www.youtube.com/watch?v=taSmwcqdkQk">https://www.youtube.com/watch?v=taSmwcqdkQk</a></li>
 <li>Handling Primary Database Failover: <a href="https://www.youtube.com/shorts/2VOU9iWo1j8">https://www.youtube.com/shorts/2VOU9iWo1j8</a></li>
-<li><a href="https://www.geeksforgeeks.org/machine-learning/ml-gradient-boosting/">https://www.geeksforgeeks.org/machine-learning/ml-gradient-boosting/</a></li>
-<li><a href="https://fr.wikipedia.org/wiki/Machine_%C3%A0_vecteurs_de_support">https://fr.wikipedia.org/wiki/Machine_%C3%A0_vecteurs_de_support</a></li>
-<li><a href="https://letsdatascience.com/blog/isolation-forest-the-random-cut-secret-to-fast-anomaly-detection">https://letsdatascience.com/blog/isolation-forest-the-random-cut-secret-to-fast-anomaly-detection</a></li>
-<li><a href="https://www.geeksforgeeks.org/machine-learning/local-outlier-factor/">https://www.geeksforgeeks.org/machine-learning/local-outlier-factor/</a></li>
-<li><a href="https://www.geeksforgeeks.org/deep-learning/architecture-and-working-of-transformers-in-deep-learning/">https://www.geeksforgeeks.org/deep-learning/architecture-and-working-of-transformers-in-deep-learning/</a></li>
-<li><a href="https://ml-compiled.readthedocs.io/en/latest/normalization.html">https://ml-compiled.readthedocs.io/en/latest/normalization.html</a></li>
-<li><a href="https://www.ibm.com/docs/fr/spss-modeler/saas?topic=dm-crisp-help-overview">https://www.ibm.com/docs/fr/spss-modeler/saas?topic=dm-crisp-help-overview</a></li>
-<li><a href="https://www.youtube.com/@ByteByteGo/videos">https://www.youtube.com/@ByteByteGo/videos</a></li>
-<li><a href="https://youtu.be/55pTFVoclvE?si=HqPyZPrPjWE3S4FU">https://youtu.be/55pTFVoclvE?si=HqPyZPrPjWE3S4FU</a></li>
+<li>Gradient Boosting: <a href="https://www.geeksforgeeks.org/machine-learning/ml-gradient-boosting/">https://www.geeksforgeeks.org/machine-learning/ml-gradient-boosting/</a></li>
+<li>SVM: <a href="https://fr.wikipedia.org/wiki/Machine_%C3%A0_vecteurs_de_support">https://fr.wikipedia.org/wiki/Machine_%C3%A0_vecteurs_de_support</a></li>
+<li>Détection d'anomalies (isolation forest): <a href="https://letsdatascience.com/blog/isolation-forest-the-random-cut-secret-to-fast-anomaly-detection">https://letsdatascience.com/blog/isolation-forest-the-random-cut-secret-to-fast-anomaly-detection</a></li>
+<li>Local Outlier Factor: <a href="https://www.geeksforgeeks.org/machine-learning/local-outlier-factor/">https://www.geeksforgeeks.org/machine-learning/local-outlier-factor/</a></li>
+<li>Architecture des transformeurs: <a href="https://www.geeksforgeeks.org/deep-learning/architecture-and-working-of-transformers-in-deep-learning/">https://www.geeksforgeeks.org/deep-learning/architecture-and-working-of-transformers-in-deep-learning/</a></li>
+<li>Normalisation: <a href="https://ml-compiled.readthedocs.io/en/latest/normalization.html">https://ml-compiled.readthedocs.io/en/latest/normalization.html</a></li>
+<li>Méthode DM-CRISP: <a href="https://www.ibm.com/docs/fr/spss-modeler/saas?topic=dm-crisp-help-overview">https://www.ibm.com/docs/fr/spss-modeler/saas?topic=dm-crisp-help-overview</a></li>
+<li>Conception des systèmes (général): <a href="https://www.youtube.com/@ByteByteGo/videos">https://www.youtube.com/@ByteByteGo/videos</a></li>
+<li>Architecture d'Atlassian, explications: <a href="https://youtu.be/55pTFVoclvE?si=HqPyZPrPjWE3S4FU">https://youtu.be/55pTFVoclvE?si=HqPyZPrPjWE3S4FU</a></li>
 <li>Comprendre l'Attention: <a href="https://www.youtube.com/watch?v=eo1BZCcFYvI">https://www.youtube.com/watch?v=eo1BZCcFYvI</a></li>
 <li>RAG vs Agentique: <a href="https://www.youtube.com/shorts/4jYZg6pkXyc">https://www.youtube.com/shorts/4jYZg6pkXyc</a></li>
 <li>Agent OpenAI: <a href="https://www.youtube.com/watch?v=5V8tP5jDZ8U">https://www.youtube.com/watch?v=5V8tP5jDZ8U</a></li>
@@ -2464,6 +2465,8 @@ WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated req
 <li>Patrons de conception agentique qui ont émergés: <a href="https://www.youtube.com/shorts/Z7bewxSJHL4">https://www.youtube.com/shorts/Z7bewxSJHL4</a></li>
 <li>JEV: <a href="https://www.youtube.com/watch?v=VE5dsWll06M">https://www.youtube.com/watch?v=VE5dsWll06M</a></li>
 <li>JEV 2: <a href="https://www.youtube.com/watch?v=vj7hysh0mOI">https://www.youtube.com/watch?v=vj7hysh0mOI</a></li>
+<li>Supervised Find Tuning: <a href="https://github.com/FareedKhan-dev/train-llm-from-scratch#sft-supervised-fine-tuning">https://github.com/FareedKhan-dev/train-llm-from-scratch#sft-supervised-fine-tuning</a></li>
+<li>RAG traditionnel vs RAG agentique: <a href="https://www.youtube.com/shorts/4jYZg6pkXyc">https://www.youtube.com/shorts/4jYZg6pkXyc</a></li>
 </ul>
 </div>
 </div></div>
