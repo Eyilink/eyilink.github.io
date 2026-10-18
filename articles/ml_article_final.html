@@ -372,7 +372,7 @@ html {
 <p><br/></p>
 <h2 id="Computing-paradigm">Computing paradigm</h2><p>Dans les systèmes distribuées, il existe plusieurs types de paradigme qui sont devenus populaires:</p>
 <ul>
-<li>L'edge computing consiste à effectuer les calculs liés à un traitement de données en marge de l'infrastructure et du réseau afin que chaque entités en marge (edge) calculs le traitement voulu sur ses données propres et qu'ensuite uniquement les résultats soient transmis à une entité centrale.</li>
+<li>L'edge computing consiste à effectuer les calculs liés à un traitement de données en marge de l'infrastructure et du réseau afin que chaque entités en marge (edge) calculs le traitement voulu sur ses propres données et qu'ensuite uniquement les résultats soient transmis à une entité centrale.</li>
 <li>Le fog computing est similaire à l'edge computing seulement il ne se contente pas de réaliser les calculs uniquement sur des entités en marge mais sur des entités sur un périmètre préalablement défini (fog).</li>
 </ul>
 <p><br/></p>
@@ -448,8 +448,8 @@ $y = X\theta + \epsilon$ ce qui revient au même que avant car $\epsilon$ est l'
 $\frac{\partial{J(\theta)}}{\partial{\theta}} = -2X^{T}(y-X\theta) = 0$ (=0 pour trouver un extremum local). On peut affirmer ici que l'on trouvera un minimum local car $J(\theta)$ est convexe.</p>
 <p>Donc si on résoud, on trouvera : $\theta = (X^{T}X)^{-1}X^{T}y$</p>
 <p>Or, le but ici est d'utiliser la descente de gradient afin de minimiser pas à pas une fonction de perte qui est MSE, ici $J(\theta) = MSE(h_{\theta}(x))$. MSE qui est une fonction qui calcule l'erreur (au carré car cela permet d'avoir que des valeurs positives et d'amplifier la valeur d'une erreur).</p>
-<p>Pour chaque itération, (on débute avec $\theta$ pris <strong>aléatoirement</strong> -&gt; donc à priori stochastique ?!) afin d'appliquer la descente de gradient (processus itératif qui réduit le gradient ou vecteur gradient calculé à la variable cible à chaque itération) : $\theta = \theta - \eta \cdot \nabla_{\theta}MSE(\theta)$ dont $\eta$ est le learning rate. Si $\eta$ est trop petit, l'algorithme prendra beaucoup de temps afin de converger. Lorsque le gradient est presque nul, le minimum est atteint.</p>
-<p>Lorsque le gradient est négatif, cela indique que l’on se situe sur une <strong>pente descendante</strong>, ce qui signifie que le <strong>minimum local</strong> n’a pas encore été atteint. C’est pourquoi l’ajustement des paramètres (<strong>learning rate</strong>) est crucial : il doit permettre de réduire progressivement l’ampleur des mises à jour si la pente devient moins abrupte, afin d’éviter de dépasser le minimum et de favoriser une convergence stable vers la solution optimale
+<p>Pour chaque itération, (on débute avec $\theta$ pris <strong>aléatoirement</strong> -&gt; donc à priori stochastique) afin d'appliquer la descente de gradient (processus itératif qui réduit le gradient ou vecteur gradient calculé à la variable cible à chaque itération) : $\theta = \theta - \eta \cdot \nabla_{\theta}MSE(\theta)$ dont $\eta$ est le learning rate. Si $\eta$ est trop petit, l'algorithme prendra beaucoup de temps afin de converger. Lorsque le gradient est presque nul, le minimum est atteint.</p>
+<p>Lorsque le gradient est négatif, cela indique que l’on se situe sur une <strong>pente descendante</strong>, ce qui signifie que le <strong>minimum local</strong> n’a pas encore été atteint. C’est pourquoi l’ajustement des paramètres (<strong>learning rate</strong>) est crucial : il doit permettre de réduire progressivement l’ampleur des mises à jour si la pente devient moins abrupte, afin d’éviter de dépasser le minimum et de favoriser une convergence stable vers la solution optimale.
 <br/>
 <br/></p>
 <h4 id="Batch-Gradient-Descent-(BGD)-vs-Stochastic-Gradient-Descent-(SGD)-:"><strong>Batch Gradient Descent (BGD) vs Stochastic Gradient Descent (SGD)</strong> :</h4><p>Premièrement, la descente de gradient est applicable sur des fonctions convexes. L'idée de la descente de gradient est de mettre à jour un paramètre de façon itérative (epoch) pour minimiser une fonction de coût.</p>
@@ -507,7 +507,6 @@ $$
 \\
 \text{where } z = \beta_{0} + \sum_{i=1}^{n} \beta_{i}x_{i} = X^{T}\theta
 $$</p>
-<p>insérer graphe -&gt; expliquer ce qu est un hyperplan , notion reutiliser dans SVM</p>
 <p>Donc, la probabilité doit être (car classification binaire) $P(y) = \hat y = \left\{
 \begin{array}{ll}
 0 &amp; \text{si } \sigma(z) &lt; 0.5 , \\
@@ -518,7 +517,7 @@ $$</p>
 <br/>
 Afin de calculer les poids $\theta$ de $z$ pour construire le modèle, le but il faut donc que le modèle estime un $z$ élevé pour les observations positives $(y = 1)$ car $\displaystyle \lim_{z \to \infty} \sigma(z) = 1$.</p>
 <p>Au contraire, pour les observations négatives (n'appartenant pas à la classe ciblée donc $y = 0$), le modèle doit estimer un $z$ bas car $\displaystyle \lim_{z \to -\infty} \sigma(z) = 0$.</p>
-<p>Il faut donc que le modèle estime un grand $z$ pour $P(y = 1)$ et que le modèle estime un petit $z$ pour $P(y = 0)$ car on essaye de s'éloigner le plus possible du 0.5. Ces exagérations sont nécessaires car sinon $z$ va se retruver dans la zone d'ombre au milieu ou il n'est pas vraiment 0 ou 1-&gt; on ne veut pas d'ambiguité.</p>
+<p>Il faut donc que le modèle estime un grand $z$ pour $P(y = 1)$ et que le modèle estime un petit $z$ pour $P(y = 0)$ car on essaye de s'éloigner le plus possible du 0.5. Ces exagérations sont nécessaires car sinon $z$ va se retrouver dans la zone d'ombre au milieu ou il n'est pas vraiment 0 ou 1-&gt; on ne veut pas d'ambiguité.</p>
 <p>La fonction de coût qui traduit le mieux cette idée utilise des logarithmes négatif ($- -\infty$) qui deviennent tres grand proche de 0. Si on prend une sortie positive ($y = 1$), on veut que notre fonction de cout coûte beaucoup si le modèle estime une probabilité $\sigma(z)$ proche de 0, car ça veut dire que le modèle est actuellement faux, et que la réalité a plus tendance à être $y = 0$ puisque $\sigma(z) &lt; 0.5$. (Il faut donc ajuster les poids pour que le modèle soit plus vrai -&gt; tout le but de la fonction de cout). Dans le cas contraire, on veut que notre fonction de coûts estime une probabilité nulle lorsqu'une probabilité $\sigma(z)$ est proche de 1 car cela veut dire que notre modèle est juste et que $y = 1$ est vrai. Donc, la fonction de coûts qui traduit le mieux cette idée est $-\log(\sigma(z))$.</p>
 <p>En revanche, si on prend une sortie négative, on veut que notre fonction coute beaucoup si le modèle estime une probabilité $\sigma(z)$ proche de 1, car ça veut dire que le modèle est actuellement faux et nécessite des ajustements. Au contraire, lorsque le modèle estime une probabilité $\sigma(z)$ proche de 0, on veut que la fonction de coûts soit presque nulle pour montrer que le modèle est actuellement juste. La fonction qui traduit le mieux cette idée est: $-\log(1 - \sigma(z))$.</p>
 <p>Seulement, ce constat est valable que sur une observation. Si on l'applique à l'ensemble du dataset, on obtient une expression appellée la parte logistique (log loss ou cross entropy binaire):
@@ -526,7 +525,6 @@ $ J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y^{i}\log(\sigma^{i}(z)) + (1-y^{i})\
 <p>$ J(\theta)$ exprime donc le cout. Si on souhaite minimiser le cout (et donc l'erreur, car la fonction de cout traduit l'erreur, plus le cout est grand plus l'erreur est grande et inversement), on applique la dérivé partielle par rapport $\theta$. Cependant, il n'existe pas de solution analytique, seulement la fonction de cout est convexe donc on peut utiliser la descente de gradient pour trouver une solution.</p>
 <p>La dérivé partielle de la fonction de cout :
 $\frac{\partial}{\partial{\theta_{j}}}J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} (\sigma(\theta^{T}x^{(i)}) - y^{i}) x_{j}^{(i)}$ pour l'ensemble du dataset. Pour chaque i-ème observation, on calcule l'erreur de prédiction et on multiplie par la j-ème variable, puis on calcule la moyenne sur l'ensemble des observations. Une fois que le vecteur gradient contenant toutes les dérivés partielles, on peut l'utiliser dans un algorithme de descente de gradient traditionnelle.</p>
-<p>Pourquoi cette dérivé partiellle ? et pourquoi ici on applique à tout le dataset ?</p>
 <h3 id="R%C3%A9gression-Softmax:"><u>Régression Softmax</u>:</h3><p>C'est une <strong>généralisation de la régression logistique</strong> pour prendre en compte <strong>plusieurs classes</strong> sans avoir d'entrainer plusieurs classeurs binaires puis les combiner (ensemble learning).</p>
 <p>Le score $s_{k}(x)$ pour chaque classe $k$. A noter que chaque classe a son vecteur de paramètres $\theta^{k}$:
 $$
@@ -633,33 +631,6 @@ En d'autres termes, la classe $C_{i}$ prédites est celle qui a la valeur $P(X|C
 <li>Naive Bayes Bernoulli: Appliqué à des variables binaires (loi de bernoulli)</li>
 </ul>
 <p>Le choix du classeur Naive Bayes dépend donc de la distribution antérieur des données</p>
-<p><strong>Conclusion</strong></p>
-<table>
-<thead>
-<tr>
-<th>Pros</th>
-<th>Cons</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>b</td>
-<td>a</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>hihi</td>
-</tr>
-</tbody>
-</table>
 <h3 id="K-nearest-neighbors-(KNN)">K-nearest neighbors (KNN)</h3><p>Précision: C'est un algorithme différent de K-means. KNN est un algorithme SUPERVISE car les classes des données d'entrainement sont déjà connues. De plus, ce n'est pas un algorithme de clustering. On pourrait croire qu'il fait partie de la catégorie du clustering ou K-means car KNN utilise des mesures de similarité pour classifier une observation.</p>
 <p>KNN est donc un <strong>algorithme de classification supervisé</strong>. C'est un des algorithmes les plus simples de ML.</p>
 <p>KNN est dit <strong>lazy learner</strong> car il n'apprend pas sur le jeu d'entrainements, les données d'entrainements sont seulement utilisée pour placer une nouvelle donnée.C'est un algorithme qui n'est pas paramétrique car aucun paramètre n'est tiré du jeu d'entrainement.</p>
@@ -668,7 +639,7 @@ En d'autres termes, la classe $C_{i}$ prédites est celle qui a la valeur $P(X|C
 <h2 id="Algorithme-de-classification-:"><strong>Algorithme de classification :</strong></h2><h3 id="Arbre-de-d%C3%A9cision:"><u>Arbre de décision</u>:</h3><p>Le but est de sélectionner la variable avec le plus grand <strong>gain d'information</strong> afin de réaliser une <strong>classification optimale</strong></p>
 <p>Soient P et N deux classes et S un ensemble d'instances contenant p éléments de P et n éléments de N.</p>
 <p>$$
-\text{Entropy (mesure l'incertitude ou la désorganisation dans un système = concretement la distance entre des objets: } \quad E(S) = - \sum_{i=1}^{n} p_{i}\log_{2}(p_{i}) \text{ dont } 0 \leq E(S) \leq 1
+\text{Entropy (mesure l'incertitude ou la désorganisation dans un système = concretement la distance entre des objets): } \quad E(S) = - \sum_{i=1}^{n} p_{i}\log_{2}(p_{i}) \text{ dont } 0 \leq E(S) \leq 1
 \\
 $$
 Dont $p_{i}$ qui est la proportion d'exemples de la i-ème classe de notre jeu d'aprentissage S. Ici, S est composé de deux classes: P et N. Donc, arbitrairement, $p_{0} = Proportion(P) = \frac{p}{n+p}$ et $p_{1} = Proportion(N) = \frac{n}{n+p}$</p>
@@ -845,18 +816,6 @@ $$</p>
 </tbody>
 </table>
 <p><br/></p>
-<table>
-<thead>
-<tr>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>hihi</td>
-</tr>
-</tbody>
-</table>
 <p><br/></p>
 <p>Les points essentiels:</p>
 <ul>
@@ -1068,19 +1027,6 @@ $$</p>
 </tbody>
 </table>
 <p><br/></p>
-<table>
-<thead>
-<tr>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>hihi</td>
-</tr>
-</tbody>
-</table>
-<p><br/></p>
 <p>Les points essentiels:</p>
 <ul>
 <li>Les centroïdes de chaque cluster sont recalibrés jusqu'à que l'inertie de chaque cluster n'est plus significativement réductible.</li>
@@ -1252,9 +1198,13 @@ $$</p>
 <p>Au lieu de choisir le nombre de dimensions, il est plus simple de choisir un contribution représentant suffisament la variance de départ comme 95%.</p>
 <p>Une autre approche consiste à afficher sur un graphe la variance en fonction du nombre de dimensions afin de sélectionner la plus optimale.</p>
 <p>Avantages:
-Minimise le sur-ajustement des données
-Temps d'entrainemet plsu court</p>
-<p>PCA randomzied/incremental</p>
+   <ul>
+      <li>Minimise le sur-ajustement des données</li>
+      <li>Temps d'entrainemet plus court</li>
+      <li>PCA randomzied/incremental</li>
+   </ul>
+
+</p>
 <h2 id="Algorithme-de-d%C3%A9tection-d'anomalies-ou-d%C3%A9tection-d'outliers:"><strong>Algorithme de détection d'anomalies ou détection d'outliers:</strong></h2><p>La détection d'anomamlies aussi appelée la <strong>détection d'outliers</strong> vise à identifier les éléments qui <strong>dévient significativement du comportement normal attendu</strong>.</p>
 <p>Les anomalies peuvent être catégorisées en trois types:</p>
 <ul>
@@ -1344,12 +1294,14 @@ $$</p>
 <h3 id="Q-learning">Q-learning</h3><p>Q-learning est un algorithme de RL qui est model free.</p>
 <p>Au coeur de cet algorithme il y a la Q-Table qui stocke les Q-values pour chaque paire état-action. Les lignes du tableau représente les états et les colonnes les actions. Donc chaque cellule du tableau contient une Q-value pour une action donné dans un état spécifique.</p>
 <p>Q-values d'un robot en fonction de l'état et action réaliséé:</p>
-<p>|Etat/Actoin       | Haut | Bas | Gauche | Droite
-|-----------|-----|----|---|----|
-|           S1  |  -1 | 0 | -0.5 | 0.2 |
-|           S2  |    0 | 1 | 0 | -0.3 |
-|          S3 |   0.5  | -0.5 | 1 | 0 |
-| S4 | -0.2 | 0 | -0.3 | 1 |</p>
+<table> <thead> <tr> <th>Etat/Action</th> <th>Haut</th> <th>Bas</th> <th>Gauche</th> <th>Droite</th> </tr> </thead> 
+   <tbody> 
+      <tr> <td>S1</td> <td>-1</td> <td>0</td> <td>-0.5</td> <td>0.2</td> </tr> 
+      <tr> <td>S2</td> <td>0</td> <td>0</td> <td>1</td> <td>-0.3</td> </tr> 
+      <tr> <td>S3</td> <td>0.5</td> <td>-0.5</td> <td>1</td> <td>0</td> </tr> 
+      <tr> <td>S4</td> <td>-0.2</td> <td>0</td> <td>-0.3</td> <td>1</td> </tr> 
+   </tbody> </table>
+
 <p><br/></p>
 <p>Les Q-values pour une paire etat-action donné sont mises à jour en utilisant une règle basé sur l'équation de Bellman:
 $$
